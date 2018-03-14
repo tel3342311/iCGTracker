@@ -1,5 +1,8 @@
 package icgtracker.liteon.com.iCGTracker;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,10 +12,14 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.crashlytics.android.Crashlytics;
+
+import icgtracker.liteon.com.iCGTracker.util.Def;
 import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity {
 
+    private SharedPreferences mSharePreference;
+    private Boolean isFirstLaunch = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,6 +27,25 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mSharePreference = getSharedPreferences(Def.SHARE_PREFERENCE, Context.MODE_PRIVATE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isFirstLaunch) {
+            showSplashPage();
+            isFirstLaunch = false;
+        }
+        Boolean isUserterm = mSharePreference.getBoolean(Def.SP_USER_TERM_READ, false);
+
+
+    }
+
+    private void showSplashPage() {
+        Intent intent = new Intent();
+        intent.setClass(this, SplashActivity.class);
+        startActivity(intent);
     }
 
     @Override
