@@ -1,8 +1,155 @@
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
     <dimen name="page_title_margin_bottom">40dp</dimen>
+    <dimen name="login_edit_text_size">16sp</dimen>
+    <dimen name="login_edit_text_height">45dp</dimen>
+    <dimen name="login_option_text_size">16sp</dimen>
+    <dimen name="login_option_text_height">30dp</dimen>
+    <dimen name="login_option_btn_width">120dp</dimen>
+    <dimen name="login_option_btn_margin_bottom">8dp</dimen>
+    <dimen name="more_icon_size">30dp</dimen>
+    <dimen name="toolbar_icon_size">30dp</dimen>
+    <!-- welcome -->
+    <dimen name="welcome_icon_size">120dp</dimen>
+    <dimen name="welcome_bottom_option_height">40dp</dimen>
+    <dimen name="welcome_user_term_margin_height">120dp</dimen>
+    <dimen name="welcome_radio_btn_margin_height">20dp</dimen>
+    <dimen name="user_term_text_size">16sp</dimen>
+
+    <!-- user term -->
+    <dimen name="page_title_height">40dp</dimen>
+    <!-- Dialog  -->
+    <dimen name="popup_width">380dp</dimen>
+    <dimen name="popup_height">380dp</dimen>
+    <dimen name="dialog_icon_size">60dp</dimen>
+    <dimen name="dialog_confirm_btn_height">50dp</dimen>
+    <dimen name="dialog_btn_margin_bottom">9dp</dimen>
+    <!-- Safty page -->
+    <dimen name="safty_map_container_height">250dp</dimen>
+    <dimen name="safty_map_view_height">200dp</dimen>
+    <dimen name="geo_event_view_fix_height">65dp</dimen>
+    <dimen name="geo_event_detail_item_height">35dp</dimen>
+    <dimen name="safty_map_text_size">12sp</dimen>
+
+    <!-- Health page -->
+    <dimen name="healthy_item_height">90dp</dimen>
+    <dimen name="healthy_item_icon_size">45dp</dimen>
+    <dimen name="healthy_item_icon_margin_right">15dp</dimen>
+    <dimen name="healthy_bottom_line_margin">15dp</dimen>
+    <!-- Health detail -->
+    <dimen name="healthy_detail_pie_chart_view_height">270dp</dimen>
+    <dimen name="healthy_detail_pie_chart_size">220dp</dimen>
+    <dimen name="healthy_detail_pie_chart_icon_size">55dp</dimen>
+    <dimen name="healthy_detail_pie_chart_icon_location_y">70dp</dimen>
+    <dimen name="healthy_detail_pie_chart_target_offset_y">15dp</dimen>
+    <dimen name="healthy_detail_pie_chart_date_offset_y">45dp</dimen>
+    <dimen name="healthy_detail_pie_chart_target_font_size">28sp</dimen>
+    <dimen name="healthy_detail_histogram_chart_height">270dp</dimen>
+    <dimen name="healthy_detail_histogram_font_size">14sp</dimen>
+    <dimen name="healthy_detail_histogram_magin_horizon">18dp</dimen>
+    <dimen name="healthy_detail_histogram_magin_vertical">16dp</dimen>
+    <dimen name="healthy_detail_histogram_width">23dp</dimen>
+    <!-- Alarm page -->
+    <dimen name="alarm_button_height">50dp</dimen>
+    <dimen name="alarm_button_magin_horizon">10dp</dimen>
+    <dimen name="alarm_item_icon_size">25dp</dimen>
+    <dimen name="alarm_setting_wheel_time_height">188dp</dimen>
+    <dimen name="alarm_setting_period_title_height">50dp</dimen>
+    <!-- Setting page -->
+    <dimen name="setting_child_info_height">250dp</dimen>
+    <dimen name="setting_circular_icon_size">133dp</dimen>
+    <dimen name="setting_circular_icon_margin_top">40dp</dimen>
+    <dimen name="setting_item_margin_horizontal">10dp</dimen>
+    <dimen name="setting_child_name_margin_top">0dp</dimen>
+    <dimen name="setting_child_name_max_width">150dp</dimen>
+    <dimen name="setting_child_name_min_width">50dp</dimen>
+    <dimen name="setting_profile_list_height">240dp</dimen>
+    <dimen name="setting_profile_item_height">50dp</dimen>
+    <dimen name="setting_profile_option_height">220dp</dimen>
+    <dimen name="setting_target_margin_left">5dp</dimen>
+    <dimen name="setting_target_size">20sp</dimen>
+    <!-- Drawer  -->
+    <dimen name="navigation_header_height">175dp</dimen>
+    <dimen name="navigation_header_circular_icon_size">66dp</dimen>
+    <dimen name="navigation_header_child_name_margin_top">10dp</dimen>
+    <dimen name="navigation_bottom_btn_margin">10dp</dimen>
+    <!-- Child add -->
+    <dimen name="child_name_item_margin_horizontal">6dp</dimen>
+    <!-- Child watch pairing -->
+    <dimen name="pairing_watch_indicator_size">26dp</dimen>
+    <dimen name="pairing_watch_bg_width">160dp</dimen>
+    <dimen name="pairing_watch_bg_height">244dp</dimen>
+    <dimen name="pairing_title_margin_top">62dp</dimen>
+    <dimen name="pairing_title_margin_horizontal">44dp</dimen>
+    <dimen name="pairing_title_text_size">15sp</dimen>
+    <dimen name="pairing_watch_margin_vertical">16dp</dimen>
+    <dimen name="pairing_bottom_area_margin_vertical">27dp</dimen>
+    <dimen name="pairing_watch_margin_bottom">60dp</dimen>
+    <dimen name="pairing_title_line_space">5dp</dimen>
+    <!-- ble pairing -->
+    <dimen name="ble_pairing_watch_img_width">125dp</dimen>
+    <dimen name="ble_pairing_watch_img_height">190dp</dimen>
+    <dimen name="ble_pairing_watch_img_margin">30dp</dimen>
+    <!-- Pin input -->
+    <dimen name="pin_content_layout_padding">40dp</dimen>
+    <dimen name="pin_label_margin">10dp</dimen>
+    <dimen name="pin_min_width">32dp</dimen>
+    <dimen name="pin_edittext_width">45dp</dimen>
+    <dimen name="pin_edittext_height">60dp</dimen>
+    <dimen name="pin_code_margin">4dp</dimen>
+    <dimen name="pin_area_top_margin">23dp</dimen>
+    <dimen name="pin_text_size">24sp</dimen>
+    <dimen name="pin_watch_bg_width">70dp</dimen>
+    <dimen name="pin_watch_bg_height">107dp</dimen>
+    <dimen name="pin_phone_bg_width">63dp</dimen>
+    <dimen name="pin_phone_bg_height">107dp</dimen>
+    <dimen name="pin_progress_margin">18dp</dimen>
+    <dimen name="pin_margin_horizontal">38dp</dimen>
+    <!-- loading page -->
+    <dimen name="main_loading_progress_size">237dp</dimen>
     <dimen name="main_loading_icon_size">104dp</dimen>
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="page_title_text_size">20sp</dimen>
+    <!-- choose photo size -->
+    <dimen name="choose_photo_item_size">118dp</dimen>
+    <dimen name="select_icon_size">24dp</dimen>
+    <!-- watch surface page -->
+    <dimen name="watch_surface_bg_width">212dp</dimen>
+    <dimen name="watch_surface_bg_height">320dp</dimen>
+    <dimen name="watch_surface_center_margin_top">201.5dp</dimen>
+    <dimen name="watch_surface_center_width">173dp</dimen>
+    <dimen name="watch_surface_center_height">150dp</dimen>
+    <dimen name="watch_surface_loading_progress_size">68dp</dimen>
+    <dimen name="watch_surface_updating_text_margin_top">34dp</dimen>
+    <!-- watch info and privacy -->
+    <dimen name="watch_info_bg_margin_top">35dp</dimen>
+    <dimen name="watch_info_bg_width">155dp</dimen>
+    <dimen name="watch_info_bg_height">238dp</dimen>
+    <dimen name="watch_info_checkbox_margin_top">34dp</dimen>
+    <dimen name="watch_info_device_name_margin_top">17dp</dimen>
+    <dimen name="watch_info_btn_margin_bottom">28dp</dimen>
+    <!-- Component text size -->
+    <dimen name="component_text_size">16sp</dimen>
+    <dimen name="component_text_size_big">18sp</dimen>
+    <dimen name="component_text_size_small">14sp</dimen>
+    <!-- sync view  -->
+    <dimen name="sync_view_height">60dp</dimen>
+    <!-- wheel  -->
+    <dimen name="wheel_content_size">24sp</dimen>
+    <!-- User Info update -->
+    <dimen name="password_hint_size">12sp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="student_item_width">66dp</dimen>
+    <dimen name="student_item_height">120dp</dimen>
+    <dimen name="student_item_icon_size">48dp</dimen>
+    <dimen name="student_info_avatar_size">130dp</dimen>
+    <dimen name="student_info_arrow_size">40dp</dimen>
+    <dimen name="com_healthy_item_height">48dp</dimen>
+    <dimen name="map_height">400dp</dimen>
+    <dimen name="com_absent_item_height">40dp</dimen>
+    <!-- Contact Matter -->
+    <dimen name="contact_matter_height">180dp</dimen>
+    <dimen name="contact_item_height">100dp</dimen>
+    <dimen name="contact_item_bottom_sheet_height">80dp</dimen>
+    <dimen name="contact_item_bottom_sheet_btn_width">120dp</dimen>
+    <dimen name="search_top_area_height">50dp</dimen>
+    <dimen name="search_top_edit_height">36dp</dimen>
+    <dimen name="search_item_height">40dp</dimen>
 </resources>

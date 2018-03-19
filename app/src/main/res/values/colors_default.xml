@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_primary">@color/md_grey_800</color>
+    <color name="color_primaryDark">@color/md_grey_800</color>
+    <color name="color_accent">#00BD70</color>
+    <color name="color_ControlHighlight">@color/md_grey_400</color>
+    <color name="color_primaryText">@color/md_black_1000</color>
+    <color name="color_windowBackground">@android:color/white</color>
+    <color name="color_textColorPrimary">@color/md_black_1000</color>
+    <color name="color_activity">#F8A53A</color>
+    <color name="color_calories">#F0641C</color>
+    <color name="color_execrise">#009A87</color>
+    <color name="color_heart_rate">#E10043</color>
+    <color name="color_sleep">#8500d5</color>
+    <color name="color_progress">#80000000</color>
+    <color name="color_ble_pairing_bg">#e7eef7</color>
+    <color name="color_btn_boarder">#d2d2d2</color>
+    <color name="color_loding_bar_ring">#11c0fe</color>
+    <color name="color_loding_bar_bg">#eaeaea</color>
+    <color name="color_btn_pressed">#1a8a59</color>
+</resources>
