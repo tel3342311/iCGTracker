@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+        <item
+            android:id="@+id/action_add_tracker"
+            android:enabled="true"
+            android:icon="@drawable/fence_btn_add"
+            android:title="@string/add_tracker"/>
+        <item
+            android:id="@+id/action_delete_tracker"
+            android:enabled="true"
+            android:icon="@drawable/fence_btn_add"
+            android:title="@string/delete_tracker"/>
+</menu>

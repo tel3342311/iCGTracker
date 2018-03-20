@@ -3,5 +3,11 @@
     <string name="action_settings">Settings</string>
     <string name="welcome_title">歡迎使用\n珍愛守護者\n應用程式</string>
     <string name="login_no_network">Unable to connect to the internet</string>
-
+    <string name="action_safe">安全守護</string>
+    <string name="action_region">守護區域</string>
+    <string name="action_trackers">過去軌跡</string>
+    <string name="logout">登出</string>
+    <string name="add_tracker">新增珍愛者</string>
+    <string name="delete_tracker">刪除％s</string>
+    <string name="login_ok">好</string>
 </resources>

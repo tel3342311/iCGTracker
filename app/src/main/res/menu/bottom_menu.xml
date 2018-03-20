@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_safety"
+        android:enabled="true"
+        android:icon="@drawable/btn_safe_btn_safe"
+        android:title="@string/action_safe" />
+    <item
+        android:id="@+id/action_region"
+        android:enabled="true"
+        android:icon="@drawable/btn_safe_btn_fence"
+        android:title="@string/action_region"/>
+    <item
+        android:id="@+id/action_trackers"
+        android:enabled="true"
+        android:icon="@drawable/btn_safe_btn_record"
+        android:title="@string/action_trackers"/>
+
+</menu>

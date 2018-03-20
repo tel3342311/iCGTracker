@@ -2,7 +2,7 @@
 <resources>
     <color name="color_primary">@color/md_grey_800</color>
     <color name="color_primaryDark">@color/md_grey_800</color>
-    <color name="color_accent">#00BD70</color>
+    <color name="color_accent">#96d3c4</color>
     <color name="color_ControlHighlight">@color/md_grey_400</color>
     <color name="color_primaryText">@color/md_black_1000</color>
     <color name="color_windowBackground">@android:color/white</color>
@@ -18,4 +18,5 @@
     <color name="color_loding_bar_ring">#11c0fe</color>
     <color name="color_loding_bar_bg">#eaeaea</color>
     <color name="color_btn_pressed">#1a8a59</color>
+    <color name="color_bottom_bar_pressed">#03c285</color>
 </resources>

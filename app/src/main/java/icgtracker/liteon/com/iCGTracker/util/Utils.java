@@ -12,7 +12,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import icgtracker.liteon.com.iCGTracker.App;
-
+import icgtracker.liteon.com.iCGTracker.R;
 public class Utils {
     private final static String TAG = Utils.class.getSimpleName();
     public static boolean isEmailValid(CharSequence email) {

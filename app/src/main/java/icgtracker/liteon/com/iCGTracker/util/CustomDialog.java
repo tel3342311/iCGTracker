@@ -12,7 +12,7 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.liteon.com.icampusteacher.R;
+import icgtracker.liteon.com.iCGTracker.R;
 
 
 public class CustomDialog extends DialogFragment {
