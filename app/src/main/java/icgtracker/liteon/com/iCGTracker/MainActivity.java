@@ -4,15 +4,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.crashlytics.android.Crashlytics;
 
+import icgtracker.liteon.com.iCGTracker.util.BottomNavigationViewHelper;
 import icgtracker.liteon.com.iCGTracker.util.Def;
 import io.fabric.sdk.android.Fabric;
 
@@ -20,14 +25,42 @@ public class MainActivity extends AppCompatActivity {
 
     private SharedPreferences mSharePreference;
     private Boolean isFirstLaunch = true;
+    private BottomNavigationView mBottomView;
+    private Toolbar mToolbar;
+    private DrawerLayout mDrawerLayout;
+    private NavigationView mNavigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        findViews();
+        setListener();
+        setupToolbar();
+        BottomNavigationViewHelper.disableShiftMode(mBottomView);
         mSharePreference = getSharedPreferences(Def.SHARE_PREFERENCE, Context.MODE_PRIVATE);
+    }
+
+    private void findViews() {
+        mToolbar = findViewById(R.id.toolbar);
+        mBottomView = findViewById(R.id.bottom_navigation);
+    }
+
+    private void setListener() {
+        mBottomView.setOnNavigationItemSelectedListener( item -> {
+            BottomNavigationViewHelper.updateBackground(mBottomView, item);
+            return true;
+        });
+    }
+
+    private void setupToolbar() {
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        mToolbar.setNavigationIcon(R.drawable.ic_dehaze_white_24dp);
+        mToolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(Gravity.LEFT));
     }
 
     @Override

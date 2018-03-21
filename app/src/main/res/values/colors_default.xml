@@ -18,5 +18,7 @@
     <color name="color_loding_bar_ring">#11c0fe</color>
     <color name="color_loding_bar_bg">#eaeaea</color>
     <color name="color_btn_pressed">#1a8a59</color>
-    <color name="color_bottom_bar_pressed">#03c285</color>
+    <color name="color_bottom_bar_pressed">#286f5f</color>
+    <color name="color_bottom_bar_normal">#22ac8c</color>
+    <color name="color_bottom_bar_icon_pressed">#65fdcc</color>
 </resources>
