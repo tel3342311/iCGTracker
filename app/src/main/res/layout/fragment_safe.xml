@@ -1,0 +1,81 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:layout="http://schemas.android.com/apk/res-auto"
+    android:background="@color/color_primary"
+    tools:context="icgtracker.liteon.com.iCGTracker.fragment.SafeFragment">
+
+
+
+    <include
+        android:id="@+id/safty_item_release"
+        layout="@layout/component_safty_item_release"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/safty_item_height"
+        layout:layout_constraintBottom_toBottomOf="parent"/>
+    <View
+        android:id="@+id/sep_line"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/md_black_1000"
+        layout:layout_constraintEnd_toEndOf="parent"
+        layout:layout_constraintStart_toStartOf="parent"
+        layout:layout_constraintBottom_toTopOf="@+id/safty_item_release" />
+
+    <include
+        android:id="@+id/safty_item_danger"
+        layout="@layout/component_safty_item_occur"
+        layout:layout_constraintBottom_toTopOf="@+id/sep_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/safty_item_height"
+        layout:layout_constraintBottom_toBottomOf="parent" />
+
+    <View
+        android:id="@+id/udpate_area"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/safty_update_bar_height"
+        android:background="@color/color_safty_update_bar"
+        layout:layout_constraintEnd_toEndOf="parent"
+        layout:layout_constraintStart_toStartOf="parent"
+        layout:layout_constraintBottom_toTopOf="@+id/safty_item_danger"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/safty_last_position"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        layout:layout_constraintTop_toTopOf="@id/udpate_area"
+        layout:layout_constraintBottom_toBottomOf="@id/udpate_area"
+        layout:layout_constraintStart_toStartOf="@id/udpate_area"/>
+
+    <TextView
+        android:id="@+id/update_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        layout:layout_constraintTop_toTopOf="@id/udpate_area"
+        layout:layout_constraintBottom_toBottomOf="@id/udpate_area"
+        layout:layout_constraintEnd_toEndOf="@id/udpate_area"
+        android:text="2018/01/01 週一 24:59"/>
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/map_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        layout:layout_constraintBottom_toTopOf="@+id/udpate_area"
+        layout:layout_constraintEnd_toEndOf="parent"
+        layout:layout_constraintStart_toStartOf="parent"
+        layout:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/map_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_my_location_black_24dp"
+        android:tint="@color/md_white_1000"
+        layout:layout_constraintEnd_toEndOf="@id/map_view"
+        layout:layout_constraintBottom_toBottomOf="@id/map_view"/>
+
+</android.support.constraint.ConstraintLayout>

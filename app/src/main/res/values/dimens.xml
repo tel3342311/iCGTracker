@@ -71,9 +71,11 @@
     <dimen name="setting_target_margin_left">5dp</dimen>
     <dimen name="setting_target_size">20sp</dimen>
     <!-- Drawer  -->
-    <dimen name="navigation_header_height">175dp</dimen>
+    <dimen name="navigation_header_height">120dp</dimen>
     <dimen name="navigation_header_circular_icon_size">66dp</dimen>
+    <dimen name="navigation_header_circular_icon_margin">32dp</dimen>
     <dimen name="navigation_header_child_name_margin_top">10dp</dimen>
+    <dimen name="navigation_header_child_name_margin_left">16dp</dimen>
     <dimen name="navigation_bottom_btn_margin">10dp</dimen>
     <!-- Child add -->
     <dimen name="child_name_item_margin_horizontal">6dp</dimen>
@@ -157,5 +159,13 @@
     <dimen name="search_item_height">40dp</dimen>
     <!-- Bottom Bar -->
     <dimen name="bottom_bar_icon_size">24dp</dimen>
-    <dimen name="bottom_bar_height">40dp</dimen>
+    <!-- Safty Page -->
+    <dimen name="safty_update_bar_height">40dp</dimen>
+    <dimen name="safty_item_height">50dp</dimen>
+    <dimen name="safty_item_icon_size">30dp</dimen>
+    <dimen name="fence_icon_size">120dp</dimen>
+    <dimen name="fence_title_area_height">60dp</dimen>
+    <dimen name="fence_list_height">140dp</dimen>
+    <dimen name="fence_list_btn_size">36dp</dimen>
+
 </resources>

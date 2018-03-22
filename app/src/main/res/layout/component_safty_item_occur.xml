@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bottom_option"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/safty_item_height"
+    android:background="@color/color_accent" >
+    
+    <ImageView
+        android:id="@+id/safty_icon"
+        android:layout_width="@dimen/safty_item_icon_size"
+        android:layout_height="@dimen/safty_item_icon_size"
+        android:layout_marginStart="@dimen/navigation_header_circular_icon_margin"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/safe_img_danger"/>
+
+    <TextView
+        android:id="@+id/safty_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/safty_icon"
+        android:layout_marginStart="@dimen/navigation_header_child_name_margin_left"
+        android:layout_centerVertical="true"
+        android:maxHeight="@dimen/setting_child_name_max_width"
+        android:singleLine="true"
+        android:text="@string/safty_emergency"
+        style="@style/list_item_big"
+        android:textColor="@color/md_red_A700"/>
+
+    <TextView
+        android:id="@+id/safty_item_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/navigation_header_child_name_margin_left"
+        android:layout_centerVertical="true"
+        android:maxHeight="@dimen/setting_child_name_max_width"
+        android:singleLine="true"
+        android:text="11:00"
+        style="@style/list_item_big"
+        android:textColor="@color/md_red_A700"/>
+
+</RelativeLayout>

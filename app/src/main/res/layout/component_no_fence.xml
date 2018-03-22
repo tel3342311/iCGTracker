@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_option"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+    <ImageView
+        android:id="@+id/fence_icon"
+        android:layout_width="@dimen/fence_icon_size"
+        android:layout_height="@dimen/fence_icon_size"
+        android:layout_marginStart="@dimen/navigation_header_circular_icon_margin"
+        android:layout_centerInParent="true"
+        android:src="@drawable/safe_btnf_fence"
+        android:tint="@color/md_grey_700"/>
+
+    <TextView
+        android:id="@+id/child_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/navigation_header_child_name_margin_left"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/fence_icon"
+        android:maxHeight="@dimen/setting_child_name_max_width"
+        android:singleLine="true"
+        android:text="@string/fence_add_new_fence"
+        style="@style/list_item_big" />
+
+</RelativeLayout>
