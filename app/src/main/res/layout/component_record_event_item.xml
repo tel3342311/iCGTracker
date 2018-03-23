@@ -6,18 +6,18 @@
     android:layout_height="@dimen/fence_list_item_height">
 
     <ImageView
-        android:id="@+id/fence_icon"
+        android:id="@+id/record_icon"
         android:layout_width="@dimen/safty_item_icon_size"
         android:layout_height="@dimen/safty_item_icon_size"
         android:layout_marginBottom="8dp"
         android:src="@drawable/record_btn_time"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/fence_item_time"
-        app:layout_constraintStart_toStartOf="@id/fence_item_time"
+        app:layout_constraintEnd_toEndOf="@id/record_item_time"
+        app:layout_constraintStart_toStartOf="@id/record_item_time"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/fence_item_time"
+        android:id="@+id/record_item_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -26,28 +26,15 @@
         android:singleLine="true"
         android:text="11:00"
         style="@style/list_item"
-        app:layout_constraintTop_toBottomOf="@id/fence_icon"/>
-
-    <TextView
-        android:id="@+id/fence_item_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:maxHeight="@dimen/setting_child_name_max_width"
-        android:singleLine="true"
-        android:text="@string/fence_enter_fence"
-        style="@style/list_item"
-        app:layout_constraintTop_toBottomOf="@id/fence_item_time"
-        app:layout_constraintStart_toStartOf="@id/fence_item_time"
-        app:layout_constraintEnd_toEndOf="@id/fence_item_time"
-        android:gravity="center" />
+        app:layout_constraintTop_toBottomOf="@id/record_icon"/>
 
     <ImageView
         android:layout_width="@dimen/fence_item_sep_line_width"
         android:layout_height="10dp"
         android:src="@drawable/dotted_line"
         android:layerType="software"
-        app:layout_constraintStart_toEndOf="@id/fence_icon"
-        app:layout_constraintTop_toTopOf="@id/fence_icon"
-        app:layout_constraintBottom_toBottomOf="@id/fence_icon"/>
+        app:layout_constraintStart_toEndOf="@id/record_icon"
+        app:layout_constraintTop_toTopOf="@id/record_icon"
+        app:layout_constraintBottom_toBottomOf="@id/record_icon"/>
 
 </android.support.constraint.ConstraintLayout>

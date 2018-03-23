@@ -1,6 +1,5 @@
 package icgtracker.liteon.com.iCGTracker.util;
 
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -15,45 +14,45 @@ import java.util.List;
 import icgtracker.liteon.com.iCGTracker.App;
 import icgtracker.liteon.com.iCGTracker.R;
 
-/**
- * Created by trdcmacpro on 2018/3/23.
- */
-
-public class FenceEntyAdapter extends RecyclerView.Adapter<FenceEntyAdapter.ViewHolder> {
+public class RecordEventAdapter extends RecyclerView.Adapter<RecordEventAdapter.ViewHolder> {
 
 
-    private List<FenceEntryItem> mDataList;
-
-    public FenceEntyAdapter(List<FenceEntryItem> list) {
+    private List<RecordEventItem> mDataList;
+    private View.OnClickListener mOnClickListener;
+    public RecordEventAdapter(List<RecordEventItem> list) {
         mDataList = list;
+    }
+
+    public void setOnClickListener(View.OnClickListener onClickListener) {
+        mOnClickListener = onClickListener;
     }
 
     @NonNull
     @Override
-    public FenceEntyAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecordEventAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.component_fence_entry_item, parent, false);
+                .inflate(R.layout.component_record_event_item, parent, false);
 
         ViewHolder viewHolder = new ViewHolder(v);
-        viewHolder.mEnterLeave = v.findViewById(R.id.fence_item_title);
-        viewHolder.mEventIcon = v.findViewById(R.id.fence_icon);
-        viewHolder.mEventTime = v.findViewById(R.id.fence_item_time);
-
+        viewHolder.mEventTime = v.findViewById(R.id.record_item_time);
+        viewHolder.mRecordIcon = v.findViewById(R.id.record_icon);
+        if (mOnClickListener != null) {
+            v.setOnClickListener(mOnClickListener);
+        }
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FenceEntyAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecordEventAdapter.ViewHolder holder, int position) {
 
-        FenceEntryItem item = mDataList.get(position);
-        holder.mEnterLeave.setText(item.isEnter() ? R.string.fence_enter_fence : R.string.fence_leave_fence);
-        holder.mEventTime.setText(item.getFenceEventTime());
-        if (item.isEnter()) {
-            holder.mEventIcon.setColorFilter(ContextCompat.getColor(App.getContext(), R.color.color_fence_enter_bg));
+        RecordEventItem item = mDataList.get(position);
+        holder.mEventTime.setText(item.getRecordEventTime());
+        if (item.isSelect()) {
+            holder.mRecordIcon.setImageDrawable(ContextCompat.getDrawable(App.getContext(), R.drawable.record_btnf_time));
         } else {
-            holder.mEventIcon.setColorFilter(ContextCompat.getColor(App.getContext(), R.color.color_fence_leave_bg));
+            holder.mRecordIcon.setImageDrawable(ContextCompat.getDrawable(App.getContext(), R.drawable.record_btn_time));
         }
     }
 
@@ -67,13 +66,11 @@ public class FenceEntyAdapter extends RecyclerView.Adapter<FenceEntyAdapter.View
 
         private View mRootView;
         private TextView mEventTime;
-        private TextView mEnterLeave;
-        private ImageView mEventIcon;
+        private ImageView mRecordIcon;
 
         public ViewHolder(View itemView) {
             super(itemView);
             mRootView = itemView;
-
         }
     }
 }

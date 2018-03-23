@@ -17,4 +17,6 @@
     <string name="safty_emergency_release">求救解除</string>
     <!-- Fence -->
     <string name="fence_add_new_fence">請建立新的守護範圍</string>
+    <string name="fence_enter_fence">進</string>
+    <string name="fence_leave_fence">出</string>
 </resources>

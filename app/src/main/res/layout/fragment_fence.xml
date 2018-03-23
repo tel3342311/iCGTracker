@@ -15,13 +15,35 @@
         android:id="@+id/fence_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@null"
         android:text="仁愛國小"
+        android:background="@null"
         style="@style/list_item_big"
+        android:textColor="@color/md_black_1000"
+        android:textCursorDrawable="@null"
+        android:maxLength="10"
         app:layout_constraintTop_toTopOf="@id/fence_title_area"
         app:layout_constraintBottom_toBottomOf="@id/fence_title_area"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/next_fence"
+        android:layout_width="@dimen/fence_list_btn_size"
+        android:layout_height="@dimen/fence_list_btn_size"
+        android:background="@drawable/btn_fence_btn_right"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/fence_title_area"/>
+
+    <ImageView
+        android:id="@+id/last_fence"
+        android:layout_width="@dimen/fence_list_btn_size"
+        android:layout_height="@dimen/fence_list_btn_size"
+        android:background="@drawable/btn_fence_btn_left"
+        android:layout_alignParentStart="true"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/fence_title_area"/>
 
     <include
         android:id="@+id/fence_enter_list_area"
@@ -40,7 +62,7 @@
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/map_view"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/fence_enter_list_area"
         app:layout_constraintEnd_toEndOf="parent"

@@ -167,5 +167,8 @@
     <dimen name="fence_title_area_height">60dp</dimen>
     <dimen name="fence_list_height">140dp</dimen>
     <dimen name="fence_list_btn_size">36dp</dimen>
+    <dimen name="fence_item_sep_line_width">30dp</dimen>
+    <dimen name="fence_list_item_height">120dp</dimen>
+
 
 </resources>

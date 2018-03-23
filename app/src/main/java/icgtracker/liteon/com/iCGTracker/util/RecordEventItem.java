@@ -1,27 +1,46 @@
 package icgtracker.liteon.com.iCGTracker.util;
 
-/**
- * Created by trdcmacpro on 2018/3/23.
- */
+import com.google.android.gms.maps.model.LatLng;
 
-public class FenceEntryItem {
+import java.util.Date;
 
-    String fenceEventTime;
-    boolean isEnter;
+public class RecordEventItem {
 
-    public boolean isEnter() {
-        return isEnter;
+    String recordEventTime;
+    LatLng latLng;
+    Date date;
+    boolean isSelect;
+
+    public boolean isSelect() {
+        return isSelect;
     }
 
-    public void setEnter(boolean enter) {
-        isEnter = enter;
+    public void setSelect(boolean select) {
+        isSelect = select;
     }
 
-    public String getFenceEventTime() {
-        return fenceEventTime;
+    public String getRecordEventTime() {
+        return recordEventTime;
     }
 
-    public void setFenceEventTime(String fenceEventTime) {
-        this.fenceEventTime = fenceEventTime;
+    public void setRecordEventTime(String recordEventTime) {
+        this.recordEventTime = recordEventTime;
+    }
+
+
+    public LatLng getLatLng() {
+        return latLng;
+    }
+
+    public void setLatLng(LatLng latLng) {
+        this.latLng = latLng;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

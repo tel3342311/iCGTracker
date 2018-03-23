@@ -5,4 +5,23 @@ package icgtracker.liteon.com.iCGTracker.util;
  */
 
 public class FenceEntryItem {
+
+    String fenceEventTime;
+    boolean isEnter;
+
+    public boolean isEnter() {
+        return isEnter;
+    }
+
+    public void setEnter(boolean enter) {
+        isEnter = enter;
+    }
+
+    public String getFenceEventTime() {
+        return fenceEventTime;
+    }
+
+    public void setFenceEventTime(String fenceEventTime) {
+        this.fenceEventTime = fenceEventTime;
+    }
 }
