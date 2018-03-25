@@ -313,6 +313,14 @@ public class RecordFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mMapView != null) {
+            mMapView.onStop();
+        }
+    }
+
     private void testData() {
 
         Calendar calendar = Calendar.getInstance();

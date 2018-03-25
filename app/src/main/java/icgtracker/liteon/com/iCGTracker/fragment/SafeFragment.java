@@ -112,6 +112,14 @@ public class SafeFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mMapView != null) {
+            mMapView.onStop();
+        }
+    }
+
     private void initMapComponent() {
         mMapView.getMapAsync(googleMap -> {
             mGoogleMap = googleMap;

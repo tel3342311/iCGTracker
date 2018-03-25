@@ -19,4 +19,7 @@
     <string name="fence_add_new_fence">請建立新的守護範圍</string>
     <string name="fence_enter_fence">進</string>
     <string name="fence_leave_fence">出</string>
+    <string name="edit_fence_title">增加守護區域</string>
+    <string name="edit_fence_hint">守護區域名</string>
+    <string name="fence_size_title">設定守護之環範圍大小(公里)</string>
 </resources>

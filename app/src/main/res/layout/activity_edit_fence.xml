@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="icgtracker.liteon.com.iCGTracker.EditFenceActivity">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:background="?attr/colorPrimary">
+        <ImageView
+            android:id="@+id/cancel"
+            android:layout_width="@dimen/bottom_bar_icon_size"
+            android:layout_height="@dimen/bottom_bar_icon_size"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:src="@drawable/ic_clear_white_24dp"/>
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/edit_fence_title"
+            android:layout_gravity="center" />
+
+        <ImageView
+            android:id="@+id/confirm"
+            android:layout_width="@dimen/bottom_bar_icon_size"
+            android:layout_height="@dimen/bottom_bar_icon_size"
+            android:src="@drawable/ic_check_white_24dp"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_gravity="right"/>
+    </android.support.v7.widget.Toolbar>
+
+    <View
+        android:id="@+id/fence_title_area"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fence_title_area_height"
+        android:background="@color/color_accent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"/>
+
+    <EditText
+        android:id="@+id/fence_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/edit_fence_hint"
+        android:background="@null"
+        style="@style/list_item_big"
+        android:textColor="@color/md_black_1000"
+        android:textCursorDrawable="@null"
+        android:maxLength="10"
+        app:layout_constraintTop_toTopOf="@id/fence_title_area"
+        app:layout_constraintBottom_toBottomOf="@id/fence_title_area"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <include android:id="@+id/fence_range"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fence_list_height"
+        layout="@layout/component_fence_size_area"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/map_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/fence_range"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fence_title_area" />
+
+</android.support.constraint.ConstraintLayout>

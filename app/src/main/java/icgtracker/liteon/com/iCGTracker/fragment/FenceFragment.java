@@ -1,11 +1,15 @@
 package icgtracker.liteon.com.iCGTracker.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -20,6 +24,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import icgtracker.liteon.com.iCGTracker.EditFenceActivity;
 import icgtracker.liteon.com.iCGTracker.R;
 import icgtracker.liteon.com.iCGTracker.util.FenceEntryItem;
 import icgtracker.liteon.com.iCGTracker.util.FenceEntyAdapter;
@@ -92,6 +97,7 @@ public class FenceFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         // Inflate the layout for this fragment
         mRootView = inflater.inflate(R.layout.fragment_fence, container, false);
         findViews();
@@ -103,6 +109,34 @@ public class FenceFragment extends Fragment {
         mDataset = new ArrayList<>();
         initRecycleView();
         return mRootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_add, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //if (mFenceList.size() >= 3) {
+            //show dialog
+        //}
+        switch (item.getItemId()) {
+            case R.id.action_add_fence:
+                Intent intent = new Intent();
+                intent.setClass(getActivity(), EditFenceActivity.class);
+                startActivity(intent);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void initRecycleView() {
@@ -218,6 +252,14 @@ public class FenceFragment extends Fragment {
         super.onResume();
         if (mMapView != null) {
             mMapView.onResume();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mMapView != null) {
+            mMapView.onStop();
         }
     }
 }

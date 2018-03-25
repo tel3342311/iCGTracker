@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_option"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/fence_list_height"
+    android:background="@color/color_accent"
+    tools:layout_editor_absoluteY="25dp">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fence_size_title"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <include
+        android:id="@+id/fence_100_meter"
+        layout="@layout/component_fence_size_item"
+        android:layout_width="@dimen/fence_size_icon_width"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toStartOf="@+id/fence_200_meter"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="30dp"/>
+
+    <include
+        android:id="@+id/fence_200_meter"
+        layout="@layout/component_fence_size_item"
+        android:layout_width="@dimen/fence_size_icon_width"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/fence_500_meter"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/fence_100_meter" />
+
+    <include
+        android:id="@+id/fence_500_meter"
+        layout="@layout/component_fence_size_item"
+        android:layout_width="@dimen/fence_size_icon_width"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/fence_1000_meter"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/fence_200_meter" />
+
+    <include
+        android:id="@+id/fence_1000_meter"
+        layout="@layout/component_fence_size_item"
+        android:layout_width="@dimen/fence_size_icon_width"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="-10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/fence_500_meter" />
+
+
+</android.support.constraint.ConstraintLayout>
