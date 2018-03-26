@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ public class UserSettingActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private List<AppInfoPrivacyItem> myDataset = new ArrayList<>();
     private Toolbar mToolbar;
+    private ImageView mBack;
     public UserSettingActivity() {
     }
 
@@ -32,6 +34,7 @@ public class UserSettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_setting);
         findViews();
+        setListener();
         //setupToolbar();
         initRecycleView();
     }
@@ -39,8 +42,12 @@ public class UserSettingActivity extends AppCompatActivity {
     private void findViews() {
         mRecyclerView = findViewById(R.id.setting_list);
         mToolbar = findViewById(R.id.toolbar);
+        mBack = findViewById(R.id.cancel);
     }
 
+    private void setListener() {
+        mBack.setOnClickListener(v -> onBackPressed());
+    }
     private void setupToolbar() {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

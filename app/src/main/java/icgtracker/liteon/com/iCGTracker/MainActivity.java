@@ -22,11 +22,15 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 
+import java.util.List;
+
+import icgtracker.liteon.com.iCGTracker.db.DBHelper;
 import icgtracker.liteon.com.iCGTracker.fragment.FenceFragment;
 import icgtracker.liteon.com.iCGTracker.fragment.RecordFragment;
 import icgtracker.liteon.com.iCGTracker.fragment.SafeFragment;
 import icgtracker.liteon.com.iCGTracker.util.BottomNavigationViewHelper;
 import icgtracker.liteon.com.iCGTracker.util.Def;
+import icgtracker.liteon.com.iCGTracker.util.JSONResponse;
 import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity {
@@ -43,7 +47,10 @@ public class MainActivity extends AppCompatActivity {
     private static final int NAVIGATION_BACK = 2;
     private TextView mTitleView;
     private View mDrawerHeader;
-
+    private DBHelper mDbHelper;
+    private List<JSONResponse.Student> mStudents;
+    private int mCurrnetStudentIdx;
+    private TextView mChildName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
         setupToolbar();
         BottomNavigationViewHelper.disableShiftMode(mBottomView);
         mSharePreference = getSharedPreferences(Def.SHARE_PREFERENCE, Context.MODE_PRIVATE);
+        mDbHelper = DBHelper.getInstance(this);
+        mStudents = mDbHelper.queryChildList(mDbHelper.getReadableDatabase());
     }
 
     private void findViews() {
@@ -63,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         mNavigationView = findViewById(R.id.navigation);
         mLogoutButton = mNavigationView.findViewById(R.id.drawer_button_logout);
         mDrawerHeader = mNavigationView.getHeaderView(0);
+        mChildName = mDrawerHeader.findViewById(R.id.child_name);
         mTitleView = findViewById(R.id.toolbar_title);
     }
 
@@ -138,6 +148,14 @@ public class MainActivity extends AppCompatActivity {
             mBottomView.setSelectedItemId(mBottomView.getSelectedItemId());
         } else {
             mBottomView.setSelectedItemId(R.id.action_safety);
+        }
+        if (mStudents != null && mStudents.size() > 0) {
+            String name = mStudents.get(mCurrnetStudentIdx).getNickname();
+            mChildName.setText(name);
+
+            MenuItem item = mNavigationView.getMenu().getItem(1);
+            String title = String.format(getString(R.string.delete_tracker), mStudents.get(mCurrnetStudentIdx).getNickname());
+            item.setTitle(title);
         }
 
     }
