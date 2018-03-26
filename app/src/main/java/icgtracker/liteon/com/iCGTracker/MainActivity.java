@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         mLogoutButton.setOnClickListener(v -> logoutAccount());
     }
 
-    private void logoutAccount() {
+    public void logoutAccount() {
 
         SharedPreferences.Editor editor = mSharePreference.edit();
         editor.remove(Def.SP_LOGIN_TOKEN);

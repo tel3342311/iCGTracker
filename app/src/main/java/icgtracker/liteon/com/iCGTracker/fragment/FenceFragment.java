@@ -35,8 +35,11 @@ import java.util.List;
 import icgtracker.liteon.com.iCGTracker.App;
 import icgtracker.liteon.com.iCGTracker.EditFenceActivity;
 import icgtracker.liteon.com.iCGTracker.R;
+import icgtracker.liteon.com.iCGTracker.db.DBHelper;
 import icgtracker.liteon.com.iCGTracker.util.FenceEntryItem;
 import icgtracker.liteon.com.iCGTracker.util.FenceEntyAdapter;
+import icgtracker.liteon.com.iCGTracker.util.FenceRangeItem;
+import icgtracker.liteon.com.iCGTracker.util.JSONResponse;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,6 +63,12 @@ public class FenceFragment extends Fragment {
     private Circle mFenceCircle;
     private Marker mMarker;
     private LatLng mLatlng = new LatLng(25.077877, 121.571141);
+    private int mMeter;
+    private List<JSONResponse.Student> mStudents;
+    private int mCurrnetStudentIdx;
+    private DBHelper mDbHelper;
+    private List<FenceRangeItem> mFenceRangeList;
+    private int mCurrentFenceIdx;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -114,6 +123,12 @@ public class FenceFragment extends Fragment {
         mRootView = inflater.inflate(R.layout.fragment_fence, container, false);
         findViews();
         setListener();
+        mDbHelper = DBHelper.getInstance(getActivity());
+        mStudents = mDbHelper.queryChildList(mDbHelper.getReadableDatabase());
+        mFenceRangeList = mDbHelper.getFenceItemByStudentID(mDbHelper.getReadableDatabase(), mStudents.get(mCurrnetStudentIdx).getStudent_id());
+        if (mFenceRangeList != null && mFenceRangeList.size() > 0) {
+            mCurrentFenceIdx = mFenceRangeList.size() - 1;
+        }
         if (mMapView != null) {
             mMapView.onCreate(savedInstanceState);
             initMapComponent();
@@ -122,6 +137,7 @@ public class FenceFragment extends Fragment {
         initRecycleView();
         return mRootView;
     }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -183,31 +199,39 @@ public class FenceFragment extends Fragment {
     private void initMapComponent() {
         mMapView.getMapAsync(googleMap -> {
             mGoogleMap = googleMap;
-
-            MarkerOptions markerOptions = new MarkerOptions().position(mLatlng);
-            if (mMarker != null) {
-                mGoogleMap.clear();
-            }
-            mMarker = mGoogleMap.addMarker(markerOptions);
-            CameraUpdate _cameraUpdate = CameraUpdateFactory.newLatLngZoom(mLatlng, 16.f);
-
-            if (mFenceCircle != null) {
-                mFenceCircle.remove();
-            }
-            mFenceCircle = mGoogleMap.addCircle(new CircleOptions()
-                    .center(mLatlng)
-                    .radius(200)
-                    .strokeColor(ContextCompat.getColor(App.getContext(), R.color.md_grey_700))
-                    .strokeWidth(1.f)
-                    .fillColor(ContextCompat.getColor(App.getContext(), R.color.color_fence_circle_bg)));
-
-
-
-            mGoogleMap.animateCamera(_cameraUpdate);
-
-
-
+            updateMap();
         });
+    }
+
+    private void updateMap() {
+        if (mGoogleMap != null) {
+            if (mFenceRangeList != null && mFenceRangeList.size() > 0) {
+                FenceRangeItem fenceItem = mFenceRangeList.get(mCurrentFenceIdx);
+                mLatlng = new LatLng(fenceItem.getLatitude(), fenceItem.getLongtitude());
+                mMeter = fenceItem.getMeter();
+                MarkerOptions markerOptions = new MarkerOptions().position(mLatlng);
+                if (mMarker != null) {
+                    mGoogleMap.clear();
+                }
+                mMarker = mGoogleMap.addMarker(markerOptions);
+                CameraUpdate _cameraUpdate = CameraUpdateFactory.newLatLngZoom(mLatlng, 16.f);
+
+                if (mFenceCircle != null) {
+                    mFenceCircle.remove();
+                }
+                mFenceCircle = mGoogleMap.addCircle(new CircleOptions()
+                        .center(mLatlng)
+                        .radius(mMeter)
+                        .strokeColor(ContextCompat.getColor(App.getContext(), R.color.md_grey_700))
+                        .strokeWidth(1.f)
+                        .fillColor(ContextCompat.getColor(App.getContext(), R.color.color_fence_circle_bg)));
+
+
+                mGoogleMap.animateCamera(_cameraUpdate);
+
+                mFenceTitle.setText(fenceItem.getTitle());
+            }
+        }
     }
 
     private void findViews() {
@@ -222,10 +246,16 @@ public class FenceFragment extends Fragment {
 
     private void setListener() {
         mLastFence.setOnClickListener(v -> {
-
+            int idx = mCurrentFenceIdx - 1;
+            mCurrentFenceIdx = (idx < 0) ? 0 : idx;
+            updateMap();
+            updateFenceRangeItemBtnState();
         });
         mNextFence.setOnClickListener(v -> {
-
+            int idx = mCurrentFenceIdx + 1;
+            mCurrentFenceIdx = (idx > mFenceRangeList.size() - 1) ? mFenceRangeList.size() - 1 : idx;
+            updateMap();
+            updateFenceRangeItemBtnState();
         });
         mForward.setOnClickListener(v -> {
             int position = ((LinearLayoutManager) mLayoutManager).findLastVisibleItemPosition();
@@ -267,6 +297,20 @@ public class FenceFragment extends Fragment {
         }
     }
 
+    private void updateFenceRangeItemBtnState() {
+        if (mCurrentFenceIdx == 0) {
+            mLastFence.setVisibility(View.INVISIBLE);
+        } else {
+            mLastFence.setVisibility(View.VISIBLE);
+        }
+
+        if (mCurrentFenceIdx == mFenceRangeList.size() - 1) {
+            mNextFence.setVisibility(View.INVISIBLE);
+        } else {
+            mNextFence.setVisibility(View.VISIBLE);
+        }
+    }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -289,6 +333,11 @@ public class FenceFragment extends Fragment {
         if (mMapView != null) {
             mMapView.onResume();
         }
+        mFenceRangeList = mDbHelper.getFenceItemByStudentID(mDbHelper.getReadableDatabase(), mStudents.get(mCurrnetStudentIdx).getStudent_id());
+        if (mFenceRangeList != null && mFenceRangeList.size() > 0) {
+            mCurrentFenceIdx = mFenceRangeList.size() - 1;
+        }
+        updateMap();
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,6 +21,13 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.List;
+
+import icgtracker.liteon.com.iCGTracker.db.DBHelper;
+import icgtracker.liteon.com.iCGTracker.util.FenceRangeItem;
+import icgtracker.liteon.com.iCGTracker.util.JSONResponse;
+import icgtracker.liteon.com.iCGTracker.util.Utils;
 
 public class EditFenceActivity extends AppCompatActivity {
 
@@ -43,6 +51,9 @@ public class EditFenceActivity extends AppCompatActivity {
     private final static int METER_500  = 500;
     private final static int METER_1000  = 1000;
     private int mCurrentFenceRange = METER_100;
+    private List<JSONResponse.Student> mStudents;
+    private int mCurrnetStudentIdx;
+    private DBHelper mDbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +65,8 @@ public class EditFenceActivity extends AppCompatActivity {
             mMapView.onCreate(savedInstanceState);
             initMapComponent();
         }
+        mDbHelper = DBHelper.getInstance(this);
+        mStudents = mDbHelper.queryChildList(mDbHelper.getReadableDatabase());
     }
 
     private void initMapComponent() {
@@ -97,8 +110,8 @@ public class EditFenceActivity extends AppCompatActivity {
     }
 
     private void setListener() {
-        mCancel.setOnClickListener( v->onBackPressed());
-        mConfirm.setOnClickListener(v->onBackPressed());
+        mCancel.setOnClickListener(v->onBackPressed());
+        mConfirm.setOnClickListener(v->onFenceAdd());
         mBtn100meter.setOnClickListener(v->onFenceRangeChange(100));
         mBtn200meter.setOnClickListener(v->onFenceRangeChange(200));
         mBtn500meter.setOnClickListener(v->onFenceRangeChange(500));
@@ -143,6 +156,32 @@ public class EditFenceActivity extends AppCompatActivity {
 
             updateSelectedRange(meter);
         }
+    }
+
+    private void onFenceAdd() {
+        if (TextUtils.isEmpty(mStudents.get(mCurrnetStudentIdx).getStudent_id())) {
+            Utils.showErrorDialog("NO DATA");
+            return;
+        }
+
+        if (mLatlng == null) {
+            Utils.showErrorDialog("NO Location DATA");
+            return;
+        }
+
+        if (TextUtils.isEmpty(mFenceName.getText().toString())) {
+            Utils.showErrorDialog("NO Fence Title");
+            return;
+        }
+
+        FenceRangeItem item = new FenceRangeItem();
+        item.setMeter(mCurrentFenceRange);
+        item.setTitle(mFenceName.getText().toString());
+        item.setStudenId(mStudents.get(mCurrnetStudentIdx).getStudent_id());
+        item.setLatitude(mLatlng.latitude);
+        item.setLongtitude(mLatlng.longitude);
+        mDbHelper.insertFenceItem(mDbHelper.getWritableDatabase(), item);
+        onBackPressed();
     }
 
     @Override

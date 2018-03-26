@@ -14,6 +14,7 @@ import icgtracker.liteon.com.iCGTracker.db.ChildLocationTable.ChildLocationEntry
 import icgtracker.liteon.com.iCGTracker.db.ChildTable.ChildEntry;
 import icgtracker.liteon.com.iCGTracker.db.EventListTable.EventListEntry;
 import icgtracker.liteon.com.iCGTracker.db.WearableTable.WearableEntry;
+import icgtracker.liteon.com.iCGTracker.util.FenceRangeItem;
 import icgtracker.liteon.com.iCGTracker.util.JSONResponse.Parent;
 import icgtracker.liteon.com.iCGTracker.util.JSONResponse.Student;
 import icgtracker.liteon.com.iCGTracker.util.WearableInfo;
@@ -27,6 +28,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	public static final int DATABASE_VERSION = 3;
 	public static final String DATABASE_NAME = "data.db";
 	private static final String TEXT_TYPE = " TEXT";
+	private static final String REAL_TYPE = " REAL";
 	private static final String INTEGER_TYPE = " INTEGER";
 	private static final String COMMA_SEP = ",";
 
@@ -80,6 +82,17 @@ public class DBHelper extends SQLiteOpenHelper {
             + WearableEntry.COLUMN_NAME_STUDENT_ID + TEXT_TYPE   + " )";
     private static final String SQL_DELETE_WEARABLE_TABLE = "DROP TABLE IF EXISTS " + WearableEntry.TABLE_NAME;
 
+    //Fence data
+	public static final String SQL_QUERY_ALL_FENCE_DATA = "SELECT * FROM " + FenceTable.FenceEntry.TABLE_NAME;
+	private static final String SQL_CREATE_FENCE_TABLE = "CREATE TABLE " + FenceTable.FenceEntry.TABLE_NAME + " ("
+			+ FenceTable.FenceEntry._ID + INTEGER_TYPE + " PRIMARY KEY" + COMMA_SEP
+			+ FenceTable.FenceEntry.COLUMN_NAME_STUDENT_ID + TEXT_TYPE + COMMA_SEP
+            + FenceTable.FenceEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP
+			+ FenceTable.FenceEntry.COLUMN_NAME_LATITUDE + REAL_TYPE + COMMA_SEP
+			+ FenceTable.FenceEntry.COLUMN_NAME_LONGTITUDE + REAL_TYPE + COMMA_SEP
+			+ FenceTable.FenceEntry.COLUMN_NAME_METER_RANGE + INTEGER_TYPE + COMMA_SEP
+			+ FenceTable.FenceEntry.COLUMN_NAME_IS_DELETED + INTEGER_TYPE + " )";
+	private static final String SQL_DELETE_FENCE_TABLE = "DROP TABLE IF EXISTS " + FenceTable.FenceEntry.TABLE_NAME;
 	public static DBHelper getInstance(Context ctx) {
 		if (mInstance == null) {
 			mInstance = new DBHelper(ctx.getApplicationContext());
@@ -107,6 +120,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		db.execSQL(SQL_CREATE_EVENT_TABLE);
 		db.execSQL(SQL_CREATE_CHILD_LOCAITON_TABLE);
 		db.execSQL(SQL_CREATE_WEARABLE_TABLE);
+		db.execSQL(SQL_CREATE_FENCE_TABLE);
 	}
 
 	@Override
@@ -116,9 +130,47 @@ public class DBHelper extends SQLiteOpenHelper {
 		db.execSQL(SQL_DELETE_EVENT_TABLE);
 		db.execSQL(SQL_DELETE_CHILD_LOCATION_TABLE);
         db.execSQL(SQL_DELETE_WEARABLE_TABLE);
+        db.execSQL(SQL_DELETE_FENCE_TABLE);
 		onCreate(db);
 	}
-	
+
+	public List<FenceRangeItem> getFenceItemByStudentID(SQLiteDatabase db, String studentId) {
+		List<FenceRangeItem> list = new ArrayList<>();
+		Cursor cursor = db.query(FenceTable.FenceEntry.TABLE_NAME, null, "student_id =?", new String[]{ studentId }, null, null,null);
+		if (cursor.getCount() > 0) {
+			cursor.moveToFirst();
+			do {
+				FenceRangeItem item = new FenceRangeItem();
+				item.set_id(cursor.getInt(cursor.getColumnIndex(FenceTable.FenceEntry._ID)));
+				item.setStudenId(cursor.getString(cursor.getColumnIndex(FenceTable.FenceEntry.COLUMN_NAME_STUDENT_ID)));
+				item.setTitle(cursor.getString(cursor.getColumnIndex(FenceTable.FenceEntry.COLUMN_NAME_TITLE)));
+				item.setLatitude(cursor.getFloat(cursor.getColumnIndex(FenceTable.FenceEntry.COLUMN_NAME_LATITUDE)));
+				item.setLongtitude(cursor.getFloat(cursor.getColumnIndex(FenceTable.FenceEntry.COLUMN_NAME_LONGTITUDE)));
+				item.setMeter(cursor.getInt(cursor.getColumnIndex(FenceTable.FenceEntry.COLUMN_NAME_METER_RANGE)));
+				list.add(item);
+			} while(cursor.moveToNext());
+			cursor.close();
+		}
+		return list;
+	}
+
+	public long insertFenceItem(SQLiteDatabase db, FenceRangeItem item) {
+		ContentValues cv = new ContentValues();
+		cv.put(FenceTable.FenceEntry.COLUMN_NAME_STUDENT_ID, item.getStudenId());
+		cv.put(FenceTable.FenceEntry.COLUMN_NAME_LATITUDE, item.getLatitude());
+		cv.put(FenceTable.FenceEntry.COLUMN_NAME_LONGTITUDE, item.getLongtitude());
+		cv.put(FenceTable.FenceEntry.COLUMN_NAME_METER_RANGE, item.getMeter());
+		cv.put(FenceTable.FenceEntry.COLUMN_NAME_TITLE, item.getTitle());
+		long ret = db.insert(FenceTable.FenceEntry.TABLE_NAME, null, cv);
+		return ret;
+	}
+
+	public int deleteFenceItem(SQLiteDatabase db, FenceRangeItem item) {
+		int ret = db.delete(FenceTable.FenceEntry.TABLE_NAME, ChildEntry._ID + "=" + item.get_id(), null);
+		db.close();
+		return ret;
+	}
+
 	public Parent getParentByToken(SQLiteDatabase db, String token) {
 		Parent item = new Parent();
 		Cursor cursor = db.rawQuery(SQL_QUERY_ALL_ACCOUNT_DATA, null);
@@ -405,6 +457,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.delete(WearableEntry.TABLE_NAME, null, null);
         db.delete(ChildLocationEntry.TABLE_NAME, null, null);
         db.delete(WearableEntry.TABLE_NAME, null, null);
+		db.delete(FenceTable.FenceEntry.TABLE_NAME, null, null);
         db.close();
     }
 }
