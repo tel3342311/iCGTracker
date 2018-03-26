@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int NAVIGATION_DRAWER = 1;
     private static final int NAVIGATION_BACK = 2;
     private TextView mTitleView;
-
+    private View mDrawerHeader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mNavigationView = findViewById(R.id.navigation);
         mLogoutButton = mNavigationView.findViewById(R.id.drawer_button_logout);
+        mDrawerHeader = mNavigationView.getHeaderView(0);
         mTitleView = findViewById(R.id.toolbar_title);
     }
 
@@ -79,6 +81,12 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
             return true;
+        });
+
+        mDrawerHeader.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setClass(this, UserSettingActivity.class);
+            startActivity(intent);
         });
 
         mNavigationView.setNavigationItemSelectedListener((MenuItem item) -> {

@@ -4,6 +4,7 @@ package icgtracker.liteon.com.iCGTracker.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,8 +16,15 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,6 +32,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import icgtracker.liteon.com.iCGTracker.App;
 import icgtracker.liteon.com.iCGTracker.EditFenceActivity;
 import icgtracker.liteon.com.iCGTracker.R;
 import icgtracker.liteon.com.iCGTracker.util.FenceEntryItem;
@@ -48,6 +57,9 @@ public class FenceFragment extends Fragment {
     private ImageView mNextFence;
     private ImageView mLastFence;
     private List<FenceEntryItem> mDataset;
+    private Circle mFenceCircle;
+    private Marker mMarker;
+    private LatLng mLatlng = new LatLng(25.077877, 121.571141);
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -171,6 +183,30 @@ public class FenceFragment extends Fragment {
     private void initMapComponent() {
         mMapView.getMapAsync(googleMap -> {
             mGoogleMap = googleMap;
+
+            MarkerOptions markerOptions = new MarkerOptions().position(mLatlng);
+            if (mMarker != null) {
+                mGoogleMap.clear();
+            }
+            mMarker = mGoogleMap.addMarker(markerOptions);
+            CameraUpdate _cameraUpdate = CameraUpdateFactory.newLatLngZoom(mLatlng, 16.f);
+
+            if (mFenceCircle != null) {
+                mFenceCircle.remove();
+            }
+            mFenceCircle = mGoogleMap.addCircle(new CircleOptions()
+                    .center(mLatlng)
+                    .radius(200)
+                    .strokeColor(ContextCompat.getColor(App.getContext(), R.color.md_grey_700))
+                    .strokeWidth(1.f)
+                    .fillColor(ContextCompat.getColor(App.getContext(), R.color.color_fence_circle_bg)));
+
+
+
+            mGoogleMap.animateCamera(_cameraUpdate);
+
+
+
         });
     }
 

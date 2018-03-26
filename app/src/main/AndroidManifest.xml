@@ -37,7 +37,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBYr6GxRMdsMkMXpi3-unpC2eBJ9b8iWHg" />
 
-        <activity android:name=".EditFenceActivity"></activity>
+        <activity android:name=".EditFenceActivity" />
+        <activity android:name=".UserSettingActivity"/>
     </application>
 
 </manifest>

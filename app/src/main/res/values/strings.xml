@@ -22,4 +22,8 @@
     <string name="edit_fence_title">增加守護區域</string>
     <string name="edit_fence_hint">守護區域名</string>
     <string name="fence_size_title">設定守護之環範圍大小(公里)</string>
+    <string name="app_ver">應用程式版本</string>
+    <string name="parent_info">使用者資料</string>
+    <string name="welcome_user_term">使用者同意授權書</string>
+    <string name="use_setting">使用者相關設定</string>
 </resources>

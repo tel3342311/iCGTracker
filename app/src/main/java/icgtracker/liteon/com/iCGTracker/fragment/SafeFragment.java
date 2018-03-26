@@ -2,14 +2,20 @@ package icgtracker.liteon.com.iCGTracker.fragment;
 
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import icgtracker.liteon.com.iCGTracker.R;
 
@@ -22,8 +28,9 @@ public class SafeFragment extends Fragment {
     private View mRootView;
     private MapView mMapView;
     private GoogleMap mGoogleMap;
-
-
+    private Marker mMarker;
+    private LatLng mLatlng = new LatLng(25.077877, 121.571141);
+    private FloatingActionButton mLocationButton;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -80,14 +87,24 @@ public class SafeFragment extends Fragment {
             mMapView.onCreate(savedInstanceState);
             initMapComponent();
         }
-
+        setListener();
         return mRootView;
     }
 
     private void findViews() {
+
         mMapView = mRootView.findViewById(R.id.map_view);
+        mLocationButton = mRootView.findViewById(R.id.map_location);
     }
 
+    private void setListener() {
+        mLocationButton.setOnClickListener( v -> {
+            if (mGoogleMap != null) {
+                CameraUpdate _cameraUpdate = CameraUpdateFactory.newLatLngZoom(mLatlng, 16.f);
+                mGoogleMap.animateCamera(_cameraUpdate);
+            }
+        });
+    }
     @Override
     public void onResume() {
         super.onResume();
@@ -123,6 +140,14 @@ public class SafeFragment extends Fragment {
     private void initMapComponent() {
         mMapView.getMapAsync(googleMap -> {
             mGoogleMap = googleMap;
+
+            MarkerOptions markerOptions = new MarkerOptions().position(mLatlng);
+            if (mMarker != null) {
+                mGoogleMap.clear();
+            }
+            mMarker = mGoogleMap.addMarker(markerOptions);
+            CameraUpdate _cameraUpdate = CameraUpdateFactory.newLatLngZoom(mLatlng, 16.f);
+            mGoogleMap.animateCamera(_cameraUpdate);
         });
     }
 }
