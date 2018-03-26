@@ -54,12 +54,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         layout="@layout/component_fence_list_area"/>
 
-    <include
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        layout="@layout/component_no_fence"
-        android:visibility="gone"/>
-
     <com.google.android.gms.maps.MapView
         android:id="@+id/map_view"
         android:layout_width="0dp"
@@ -68,5 +62,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/fence_title_area" />
+
+    <include
+        android:id="@+id/no_data"
+        layout="@layout/component_no_fence"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/fence_title_area" />
 
 </android.support.constraint.ConstraintLayout>

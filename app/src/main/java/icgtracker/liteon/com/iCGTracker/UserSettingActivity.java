@@ -35,7 +35,6 @@ public class UserSettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_setting);
         findViews();
         setListener();
-        //setupToolbar();
         initRecycleView();
     }
 
@@ -47,15 +46,6 @@ public class UserSettingActivity extends AppCompatActivity {
 
     private void setListener() {
         mBack.setOnClickListener(v -> onBackPressed());
-    }
-    private void setupToolbar() {
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
-        mToolbar.setNavigationIcon(R.drawable.ic_navigate_before_white_24dp);
-        mToolbar.setNavigationOnClickListener(v -> onBackPressed());
-        mToolbar.setTitle("");
     }
 
     public void initRecycleView() {
@@ -75,15 +65,11 @@ public class UserSettingActivity extends AppCompatActivity {
 
     }
 
-    private ViewHolder.IAppInfoPrivacyViewHolderClicks mClicks = new ViewHolder.IAppInfoPrivacyViewHolderClicks() {
+    private ViewHolder.IAppInfoPrivacyViewHolderClicks mClicks = item -> {
+        if (item.getItemType() == AppInfoPrivacyItem.TYPE.PARENT_INFO) {
 
-        @Override
-        public void onClick(AppInfoPrivacyItem item) {
-            if (item.getItemType() == AppInfoPrivacyItem.TYPE.PARENT_INFO) {
+        } else if (item.getItemType() == AppInfoPrivacyItem.TYPE.USER_TERM){
 
-            } else if (item.getItemType() == AppInfoPrivacyItem.TYPE.USER_TERM){
-
-            }
         }
     };
 

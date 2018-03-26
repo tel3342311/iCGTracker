@@ -69,6 +69,7 @@ public class FenceFragment extends Fragment {
     private DBHelper mDbHelper;
     private List<FenceRangeItem> mFenceRangeList;
     private int mCurrentFenceIdx;
+    private View mNoFenceView;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -242,6 +243,7 @@ public class FenceFragment extends Fragment {
         mRecyclerView = mRootView.findViewById(R.id.fence_entry_list);
         mForward = mRootView.findViewById(R.id.forward);
         mBackward = mRootView.findViewById(R.id.backward);
+        mNoFenceView = mRootView.findViewById(R.id.no_data);
     }
 
     private void setListener() {
@@ -336,6 +338,9 @@ public class FenceFragment extends Fragment {
         mFenceRangeList = mDbHelper.getFenceItemByStudentID(mDbHelper.getReadableDatabase(), mStudents.get(mCurrnetStudentIdx).getStudent_id());
         if (mFenceRangeList != null && mFenceRangeList.size() > 0) {
             mCurrentFenceIdx = mFenceRangeList.size() - 1;
+            mNoFenceView.setVisibility(View.GONE);
+        } else {
+            mNoFenceView.setVisibility(View.VISIBLE);
         }
         updateMap();
     }
