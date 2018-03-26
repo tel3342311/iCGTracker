@@ -1,4 +1,7 @@
 <resources>
+    <string name="facebook_app_id">184808298966396</string>
+    <string name="fb_login_protocol_scheme">fb184808298966396</string>
+
     <string name="app_name">iCG Tracker</string>
     <string name="action_settings">Settings</string>
     <string name="welcome_title">歡迎使用\n珍愛守護者\n應用程式</string>
@@ -10,6 +13,27 @@
     <string name="add_tracker">新增珍愛者</string>
     <string name="delete_tracker">刪除％s</string>
     <string name="login_ok">好</string>
+    <!--  login Page -->
+    <string name="login_parent_account">登入帳號</string>
+    <string name="login_account">帳號(電子郵件地址)</string>
+    <string name="login_password">密碼</string>
+    <string name="login_register_new_account">註冊新帳號</string>
+    <string name="login_forget_password">忘記密碼?</string>
+    <string name="login_login">登入</string>
+    <string name="login_social_signin">使用第三方帳號登入</string>
+    <string name="login_google">Google</string>
+    <string name="login_facebook">Facebook</string>
+    <string name="login_error_email">電子郵件地址錯誤</string>
+    <string name="login_already_used">此電子郵件已註冊過，請回到登入頁面直接登入，若忘記密碼請點選忘記密碼，系統將寄送密碼重設至您的信箱</string>
+    <string name="login_error_account_or_password">帳號或密碼輸入錯誤，請重新輸入</string>
+    <string name="login_error_no_server_connection">無法建立與系統連線, 請稍候再試!</string>
+    <!-- Welcome Page -->
+    <string name="welcome_read_eula">點選同意以確認iCG校園守護者的使用者協議及隱私政策</string>
+    <string name="welcome_user_term_content">"END USER LICENSE AGREEMENT – CORPORATE SOLUTIONS V.01 Please read the following license agreement carefully before using this program. By accepting the agreement, you are agreeing to become the licensee and expressing your complete acceptance of all the terms and conditions of this license agreement. If you do not accept the terms of the agreement, do not install the program. Similarly, use of the program implies your acceptance to be bound by the terms and conditions of this license agreement. This license agreement represents the entire agreement. This license agreement supersedes any prior license agreements licensee with respect to this product or the product it replaces. Similarly, and where permissible under applicable legislation, the terms and conditions of the present license agreement shall take precedence over any communication or advertising material in the event that such material contradicts any of said terms and conditions or where such material predates this license agreement. The acceptance of the terms and conditions of this agreement does not confer any rights of ownership over the programs or products belonging to LITE-ON.  "</string>
+    <string name="welcome_join_program">參與使用者體驗改善計畫</string>
+    <string name="welcome_permission_term">學校老師可以獲得寶貝睡眠資訊</string>
+    <string name="welcome_accept">同意</string>
+    <string name="welcome_quit">退出</string>
     <!-- Safty -->
     <string name="safty">安心</string>
     <string name="safty_last_position">此為GPS最後更新位置</string>
@@ -26,4 +50,35 @@
     <string name="parent_info">使用者資料</string>
     <string name="welcome_user_term">使用者同意授權書</string>
     <string name="use_setting">使用者相關設定</string>
+    <!-- Register new account -->
+    <string name="register_name">姓名</string>
+    <string name="register_password">密碼 (至少八碼英文或數字)</string>
+    <string name="register_mobile">手機號碼</string>
+    <string name="register_confirm_password">再次確認新密碼</string>
+    <string name="register_password_not_match">密碼與確認密碼不相符</string>
+    <string name="register_successed">帳號註冊成功</string>
+    <string name="register_successed_desc">系統已寄出註冊確認信件到您註冊的電子郵件信箱，請查看信件並點選連結完成註冊程序以登入！</string>
+
+    <!-- Forget Password -->
+    <string name="forget_reset_password">重置您的密碼</string>
+    <string name="forget_input_original_account">請輸入您當初註冊iCampus Guardian的帳號(電子郵件地址),我們將會傳送重設的密碼至您登錄的電子郵件。</string>
+    <string name="forget_send">送出</string>
+    <string name="forget_back_to_login">回登入頁面</string>
+    <string name="forget_reset_done">系統已重設您的密碼</string>
+    <string name="forget_account_not_exist">查無此登錄帳號(電子郵件)，請再確認!</string>
+    <string name="forget_check_mailbox_and_setup">請查看信箱並使用系統寄出的聯結重新設定密碼</string>
+
+    <!-- App info and setting -->
+    <string name="app_info_setting">App 資訊與設定</string>
+    <string name="app_version_title">APP版本</string>
+    <string name="app_version">V %s</string>
+    <string name="original_password">原密碼</string>
+    <string name="new_password">新密碼 (至少八碼英文或數字)</string>
+    <string name="confirm_new_password">再次確認新密碼</string>
+    <string name="remember_new_password">如有更改密碼將重新登入，請記住新密碼</string>
+    <string name="data_updating">資料更新中…</string>
+    <string name="update_failed">更新失敗</string>
+    <string name="update_failed_confirm">好</string>
+    <string name="wrong_password">原密碼錯誤</string>
+    <string name="password_not_match">密碼與確認密碼不相同</string>
 </resources>

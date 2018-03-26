@@ -1,0 +1,144 @@
+{
+  "project_info": {
+    "project_number": "722705116065",
+    "firebase_url": "https://icampus-guardian-1496820423406.firebaseio.com",
+    "project_id": "icampus-guardian-1496820423406",
+    "storage_bucket": "icampus-guardian-1496820423406.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:722705116065:android:cea7d8ba15cecf2e",
+        "android_client_info": {
+          "package_name": "com.liteon.icampusguardian"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "722705116065-mdktacinc7e5amj1n44ov3ff79dmc5hf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.liteon.icampusguardian",
+            "certificate_hash": "dfa6bb0409f41623bc357d6965a04ef9e2343285"
+          }
+        },
+        {
+          "client_id": "722705116065-8or2j6a5n6nniv4318ddfkaae8m8ug6s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOvdzpZ4lZXMG-5reyNczboU-uWYOdKwY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "722705116065-7l433kaok3uvkosugn4g70e47aopsgre.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.liteon.ICGforTeachers"
+              }
+            },
+            {
+              "client_id": "722705116065-8or2j6a5n6nniv4318ddfkaae8m8ug6s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:722705116065:android:9e3c288319b7ae29",
+        "android_client_info": {
+          "package_name": "com.liteon.com.icampusteacher"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "722705116065-b9ld66jfrnlr4h753gljllskafkdd90q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.liteon.com.icampusteacher",
+            "certificate_hash": "dfa6bb0409f41623bc357d6965a04ef9e2343285"
+          }
+        },
+        {
+          "client_id": "722705116065-8or2j6a5n6nniv4318ddfkaae8m8ug6s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOvdzpZ4lZXMG-5reyNczboU-uWYOdKwY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "722705116065-7l433kaok3uvkosugn4g70e47aopsgre.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.liteon.ICGforTeachers"
+              }
+            },
+            {
+              "client_id": "722705116065-8or2j6a5n6nniv4318ddfkaae8m8ug6s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:722705116065:android:e1b25dd00730f417",
+        "android_client_info": {
+          "package_name": "icgtracker.liteon.com.iCGTracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "722705116065-8or2j6a5n6nniv4318ddfkaae8m8ug6s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOvdzpZ4lZXMG-5reyNczboU-uWYOdKwY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

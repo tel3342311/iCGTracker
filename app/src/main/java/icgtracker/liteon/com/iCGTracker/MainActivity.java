@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -104,7 +105,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void logoutAccount() {
 
+        SharedPreferences.Editor editor = mSharePreference.edit();
+        editor.remove(Def.SP_LOGIN_TOKEN);
+        editor.commit();
         mDrawerLayout.closeDrawers();
+        showLoginPage();
     }
 
     private void setupToolbar() {
@@ -124,13 +129,23 @@ public class MainActivity extends AppCompatActivity {
             isFirstLaunch = false;
         }
         Boolean isUserterm = mSharePreference.getBoolean(Def.SP_USER_TERM_READ, false);
-
+        String token = mSharePreference.getString(Def.SP_LOGIN_TOKEN, "");
+        if (TextUtils.isEmpty(token)) {
+            showLoginPage();
+            return;
+        }
         if (mBottomView.getSelectedItemId() != 0) {
             mBottomView.setSelectedItemId(mBottomView.getSelectedItemId());
         } else {
             mBottomView.setSelectedItemId(R.id.action_safety);
         }
 
+    }
+
+    private void showLoginPage() {
+        Intent intent = new Intent();
+        intent.setClass(this, LoginActivity.class);
+        startActivity(intent);
     }
 
     private void showSplashPage() {
