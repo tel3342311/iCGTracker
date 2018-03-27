@@ -56,8 +56,13 @@
         android:background="@color/md_grey_100"
         app:headerLayout="@layout/component_navigation_header"
         app:itemIconTint="@color/color_primaryText"
-        app:itemTextColor="@color/color_primaryText"
-        app:menu="@menu/drawer_menu" >
+        app:itemTextColor="@color/color_primaryText">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/drawer_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/navigation_header_height"/>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/drawer_button_logout"

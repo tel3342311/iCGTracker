@@ -12,6 +12,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -22,14 +24,18 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import icgtracker.liteon.com.iCGTracker.db.DBHelper;
 import icgtracker.liteon.com.iCGTracker.fragment.FenceFragment;
 import icgtracker.liteon.com.iCGTracker.fragment.RecordFragment;
 import icgtracker.liteon.com.iCGTracker.fragment.SafeFragment;
+import icgtracker.liteon.com.iCGTracker.util.AppDrawerItem;
+import icgtracker.liteon.com.iCGTracker.util.AppDrawerItemAdapter;
 import icgtracker.liteon.com.iCGTracker.util.BottomNavigationViewHelper;
 import icgtracker.liteon.com.iCGTracker.util.Def;
+import icgtracker.liteon.com.iCGTracker.util.FenceEntyAdapter;
 import icgtracker.liteon.com.iCGTracker.util.JSONResponse;
 import io.fabric.sdk.android.Fabric;
 
@@ -51,6 +57,11 @@ public class MainActivity extends AppCompatActivity {
     private List<JSONResponse.Student> mStudents;
     private int mCurrnetStudentIdx;
     private TextView mChildName;
+    private RecyclerView mDrawerList;
+    private RecyclerView.Adapter mDrawerAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private List<AppDrawerItem> mDataset = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
         mSharePreference = getSharedPreferences(Def.SHARE_PREFERENCE, Context.MODE_PRIVATE);
         mDbHelper = DBHelper.getInstance(this);
         mStudents = mDbHelper.queryChildList(mDbHelper.getReadableDatabase());
+        setupDrawerMenu();
+
     }
 
     private void findViews() {
@@ -72,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         mNavigationView = findViewById(R.id.navigation);
         mLogoutButton = mNavigationView.findViewById(R.id.drawer_button_logout);
         mDrawerHeader = mNavigationView.getHeaderView(0);
+        mDrawerList = mNavigationView.findViewById(R.id.drawer_list);
         mChildName = mDrawerHeader.findViewById(R.id.child_name);
         mTitleView = findViewById(R.id.toolbar_title);
     }
@@ -122,6 +136,36 @@ public class MainActivity extends AppCompatActivity {
         showLoginPage();
     }
 
+    private void setupDrawerMenu() {
+
+        mDrawerList.setHasFixedSize(true);
+
+        mLayoutManager = new LinearLayoutManager(this);
+        mDrawerList.setLayoutManager(mLayoutManager);
+        updateDrawerData();
+        mDrawerAdapter = new AppDrawerItemAdapter(mDataset, v -> {}, mStudents.get(mCurrnetStudentIdx).getNickname());
+        mDrawerList.setAdapter(mDrawerAdapter);
+    }
+
+    private void updateDrawerData() {
+
+        int i = 0;
+        AppDrawerItem item;
+        for (JSONResponse.Student student : mStudents) {
+            item = new AppDrawerItem();
+            item.setItemType(AppDrawerItem.TYPE.USER);
+            item.setValue(student.getNickname());
+            mDataset.add(i++, item);
+        }
+        item = new AppDrawerItem();
+        item.setItemType(AppDrawerItem.TYPE.ADD_USER);
+        mDataset.add(i++, item);
+
+        item = new AppDrawerItem();
+        item.setItemType(AppDrawerItem.TYPE.DELETE_USER);
+        mDataset.add(i, item);
+    }
+
     private void setupToolbar() {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -149,15 +193,11 @@ public class MainActivity extends AppCompatActivity {
         } else {
             mBottomView.setSelectedItemId(R.id.action_safety);
         }
+
         if (mStudents != null && mStudents.size() > 0) {
             String name = mStudents.get(mCurrnetStudentIdx).getNickname();
             mChildName.setText(name);
-
-            MenuItem item = mNavigationView.getMenu().getItem(1);
-            String title = String.format(getString(R.string.delete_tracker), mStudents.get(mCurrnetStudentIdx).getNickname());
-            item.setTitle(title);
         }
-
     }
 
     private void showLoginPage() {

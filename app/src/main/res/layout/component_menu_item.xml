@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/drawer_item_height">
+
+
+    <ImageView
+        android:id="@+id/item_icon"
+        android:layout_width="@dimen/drawer_icon_size"
+        android:layout_height="@dimen/drawer_icon_size"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:background="@drawable/menu_img_smail"/>
+
+     <TextView
+         android:id="@+id/title_text"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_centerVertical="true"
+         android:layout_toEndOf="@id/item_icon"
+         android:layout_marginStart="@dimen/activity_horizontal_margin"
+         style="@style/list_item"/>
+
+     <ImageView
+         android:id="@+id/item_connect_icon"
+         android:layout_width="@dimen/drawer_icon_size"
+         android:layout_height="@dimen/drawer_icon_size"
+         android:layout_centerVertical="true"
+         android:layout_alignParentEnd="true"
+         android:layout_marginEnd="@dimen/activity_vertical_margin"
+         android:background="@drawable/menu_img_smail"
+         android:visibility="invisible"/>
+
+     <View
+         android:layout_width="match_parent"
+         android:layout_height="1dp"
+         android:background="@color/md_grey_200"
+         android:layout_alignParentBottom="true"
+         android:layout_alignParentStart="true" />
+
+</RelativeLayout>
