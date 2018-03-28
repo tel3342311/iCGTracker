@@ -14,6 +14,7 @@ import icgtracker.liteon.com.iCGTracker.db.ChildLocationTable.ChildLocationEntry
 import icgtracker.liteon.com.iCGTracker.db.ChildTable.ChildEntry;
 import icgtracker.liteon.com.iCGTracker.db.EventListTable.EventListEntry;
 import icgtracker.liteon.com.iCGTracker.db.WearableTable.WearableEntry;
+import icgtracker.liteon.com.iCGTracker.util.ChildLocationItem;
 import icgtracker.liteon.com.iCGTracker.util.FenceRangeItem;
 import icgtracker.liteon.com.iCGTracker.util.JSONResponse.Parent;
 import icgtracker.liteon.com.iCGTracker.util.JSONResponse.Student;
@@ -103,10 +104,10 @@ public class DBHelper extends SQLiteOpenHelper {
 	// child location data
 	public static final String SQL_QUERY_CHILD_LOCATION_DATA = "SELECT * FROM " + ChildLocationEntry.TABLE_NAME;
 	private static final String SQL_CREATE_CHILD_LOCAITON_TABLE = "CREATE TABLE " + ChildLocationEntry.TABLE_NAME + " ("
-			+ ChildLocationEntry.COLUMN_NAME_STUDENTID + TEXT_TYPE + " PRIMARY KEY" + COMMA_SEP
-			+ ChildLocationEntry.COLUMN_NAME_LATITUDE + TEXT_TYPE + COMMA_SEP
-            + ChildLocationEntry.COLUMN_NAME_LONGITUDE + TEXT_TYPE + COMMA_SEP
-            + ChildLocationEntry.COLUMN_NAME_UPDATE_TIME + INTEGER_TYPE + " )";
+			+ ChildLocationEntry.COLUMN_NAME_UUID + TEXT_TYPE + " PRIMARY KEY" + COMMA_SEP
+			+ ChildLocationEntry.COLUMN_NAME_LATITUDE + REAL_TYPE + COMMA_SEP
+            + ChildLocationEntry.COLUMN_NAME_LONGITUDE + REAL_TYPE + COMMA_SEP
+            + ChildLocationEntry.COLUMN_NAME_UPDATE_TIME + TEXT_TYPE + " )";
 	private static final String SQL_DELETE_CHILD_LOCATION_TABLE = "DROP TABLE IF EXISTS " + ChildLocationEntry.TABLE_NAME;
 
 	private DBHelper(Context context) {
@@ -375,78 +376,45 @@ public class DBHelper extends SQLiteOpenHelper {
         return false;
     }
 
-	private void createDummyData(SQLiteDatabase db) {
-
-	    //Child Data
-        List<Student> studentList = new ArrayList<>();
-		Student item = new Student();
-		//student 1
-		item.setUuid("");
-		item.setName("Name");
-		item.setNickname("Pink");
-		item.setGender("FeMale");
-		item.setDob("1995-01-01");
-		item.setHeight("150");
-		item.setWeight("40");
-		item.setRoll_no(11);
-		item.set_class("1");
-		item.setStudent_id(1);
-		studentList.add(item);
-
-		//student 2
-        item = new Student();
-		item.setUuid("");
-		item.setName("Name");
-		item.setNickname("Gibert");
-		item.setGender("Male");
-		item.setDob("1996-03-01");
-		item.setHeight("140");
-		item.setWeight("40");
-		item.setRoll_no(12);
-		item.set_class("2");
-		item.setStudent_id(2);
-        studentList.add(item);
-
-		insertChildList(db, studentList);
-
-		//Parent Data
-        ContentValues cv = new ContentValues();
-        cv.put(AccountEntry.COLUMN_NAME_USER_NAME, "admin3@parent.com");
-        cv.put(AccountEntry.COLUMN_NAME_PASSWORD, "password");
-        cv.put(AccountEntry.COLUMN_NAME_TOKEN, "E8C33BCCC8A1E1627B28B65B0B4DE829");
-        cv.put(AccountEntry.COLUMN_NAME_ACCOUNT_NAME, "LO Parent User");
-        cv.put(AccountEntry.COLUMN_NAME_MOBILE_NUMBER, "9030008893");
-        insertAccount(getWritableDatabase(), cv);
-
-        //location Data child 1
-        cv.clear();
-        cv.put(ChildLocationEntry.COLUMN_NAME_STUDENTID, "1");
-        cv.put(ChildLocationEntry.COLUMN_NAME_LATITUDE, "25.029600");
-        cv.put(ChildLocationEntry.COLUMN_NAME_LONGITUDE, "121.533260");
-        cv.put(ChildLocationEntry.COLUMN_NAME_UPDATE_TIME, Calendar.getInstance().getTimeInMillis());
-        insertChildLocation(getWritableDatabase(), cv);
-        //location Data child 2
-        cv.clear();
-        cv.put(ChildLocationEntry.COLUMN_NAME_STUDENTID, "2");
-        cv.put(ChildLocationEntry.COLUMN_NAME_LATITUDE, "25.039594");
-        cv.put(ChildLocationEntry.COLUMN_NAME_LONGITUDE, "121.559538");
-        cv.put(ChildLocationEntry.COLUMN_NAME_UPDATE_TIME, Calendar.getInstance().getTimeInMillis());
-        insertChildLocation(getWritableDatabase(), cv);
-	}
-
     public void insertChildLocation(SQLiteDatabase db, ContentValues cv) {
         db.insert(ChildLocationEntry.TABLE_NAME, null, cv);
         db.close();
 	}
 
-	public LatLng getChildLocationByID(SQLiteDatabase db, String studentID) {
-        Cursor c = db.query(ChildLocationEntry.TABLE_NAME, new String[] { ChildLocationEntry.COLUMN_NAME_LATITUDE, ChildLocationEntry.COLUMN_NAME_LONGITUDE}, "student_id =?",
-                new String[] { studentID }, null, null, null, null);
-        if (c.moveToFirst()) {// if the row exist then return the id
-            String lat = c.getString(c.getColumnIndex(ChildLocationEntry.COLUMN_NAME_LATITUDE));
-            String lng = c.getString(c.getColumnIndex(ChildLocationEntry.COLUMN_NAME_LONGITUDE));
-            LatLng location = new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
-            return location;
+	public void updateChildLocation(SQLiteDatabase db, ChildLocationItem item) {
+
+        ContentValues cv = new ContentValues();
+        cv.put(ChildLocationEntry.COLUMN_NAME_LATITUDE, item.getLatlng().latitude);
+        cv.put(ChildLocationEntry.COLUMN_NAME_LONGITUDE, item.getLatlng().longitude);
+        cv.put(ChildLocationEntry.COLUMN_NAME_UPDATE_TIME, Calendar.getInstance().getTimeInMillis());
+        cv.put(ChildLocationEntry.COLUMN_NAME_UUID, item.getUuid());
+	    db.replace(ChildLocationEntry.TABLE_NAME, null, cv);
+        db.close();
+    }
+
+	public ChildLocationItem getChildLocationByID(SQLiteDatabase db, String uuid) {
+        Cursor cursor = null;
+        try {
+            cursor = db.query(ChildLocationEntry.TABLE_NAME, new String[]{ChildLocationEntry.COLUMN_NAME_LATITUDE, ChildLocationEntry.COLUMN_NAME_LONGITUDE, ChildLocationEntry.COLUMN_NAME_UPDATE_TIME}, "uuid =?",
+                    new String[]{uuid}, null, null, null, null);
+            if (cursor.moveToFirst()) {// if the row exist then return the id
+                ChildLocationItem item = new ChildLocationItem();
+
+                Double lat = cursor.getDouble(cursor.getColumnIndex(ChildLocationEntry.COLUMN_NAME_LATITUDE));
+                Double lng = cursor.getDouble(cursor.getColumnIndex(ChildLocationEntry.COLUMN_NAME_LONGITUDE));
+                String date = cursor.getString(cursor.getColumnIndex(ChildLocationEntry.COLUMN_NAME_UPDATE_TIME));
+                LatLng location = new LatLng(lat, lng);
+                item.setLatlng(location);
+                item.setDate(date);
+                item.setUuid(uuid);
+                return item;
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            if (cursor != null) {
+                close();
+            }
         }
         return null;
     }

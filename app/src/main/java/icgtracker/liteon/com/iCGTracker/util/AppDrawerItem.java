@@ -24,6 +24,17 @@ public class AppDrawerItem {
 	
 	TYPE itemType;
 	String value;
+	boolean isSelect;
+
+	public boolean getSelect() {
+		return isSelect;
+	}
+
+	public void setSelect(Boolean select) {
+		isSelect = select;
+	}
+
+
 	/**
 	 * @return the value
 	 */

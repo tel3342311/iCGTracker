@@ -18,7 +18,7 @@ import icgtracker.liteon.com.iCGTracker.R;
 
 public class AppDrawerItemAdapter extends Adapter<AppDrawerItemAdapter.ViewHolder> {
 
-	private WeakReference<ViewHolder.IDrawerViewHolderClicks> mClickListener;
+	private ViewHolder.IDrawerViewHolderClicks mClickListener;
 	private List<AppDrawerItem> mDataset;
 	private String mTrackerName;
 
@@ -34,15 +34,15 @@ public class AppDrawerItemAdapter extends Adapter<AppDrawerItemAdapter.ViewHolde
         public ImageView mItemIcon;
         public ImageView mItemLinkIcon;
         private AppDrawerItem mItem;
-        public WeakReference<IDrawerViewHolderClicks> mClicks;
+        public IDrawerViewHolderClicks mClicks;
         public ViewHolder(View v, IDrawerViewHolderClicks click) {
             super(v);
             mRootView = v;
-            mClicks = new WeakReference<IDrawerViewHolderClicks>(click);
+            mClicks = click;
         }
 		@Override
 		public void onClick(View v) {
-			mClicks.get().onClick(mItem);
+			mClicks.onClick(mItem);
 		}
 
 		public static interface IDrawerViewHolderClicks {
@@ -52,7 +52,7 @@ public class AppDrawerItemAdapter extends Adapter<AppDrawerItemAdapter.ViewHolde
 
     public AppDrawerItemAdapter(List<AppDrawerItem> appInfoDataset, ViewHolder.IDrawerViewHolderClicks clicks, String trackerName) {
         mDataset = appInfoDataset;
-        mClickListener = new WeakReference<ViewHolder.IDrawerViewHolderClicks>(clicks);
+        mClickListener = clicks;
         mTrackerName = trackerName;
     }
     
@@ -72,6 +72,13 @@ public class AppDrawerItemAdapter extends Adapter<AppDrawerItemAdapter.ViewHolde
         } else if (item.getItemType() == AppDrawerItem.TYPE.ADD_USER) {
             holder.mItemIcon.setBackground(ContextCompat.getDrawable(App.getContext(), R.drawable.menu_img_add));
             holder.mRootView.setBackgroundColor(ContextCompat.getColor(App.getContext(),R.color.md_grey_300));
+        } else {
+            if (item.getSelect()){
+                holder.mTitleTextView.setTextColor(ContextCompat.getColor(App.getContext(),R.color.color_accent));
+            } else {
+                holder.mTitleTextView.setTextColor(ContextCompat.getColor(App.getContext(),R.color.md_black_1000));
+            }
+            holder.mTitleTextView.setText(item.getValue());
         }
         holder.mItem = mDataset.get(position);
 
@@ -83,7 +90,7 @@ public class AppDrawerItemAdapter extends Adapter<AppDrawerItemAdapter.ViewHolde
         View v = LayoutInflater.from(parent.getContext())
                                .inflate(R.layout.component_menu_item, parent, false);
         // set the view's size, margins, paddings and layout parameters
-        ViewHolder vh = new ViewHolder(v, mClickListener.get());
+        ViewHolder vh = new ViewHolder(v, mClickListener);
         vh.mTitleTextView = v.findViewById(R.id.title_text);
         vh.mItemIcon = v.findViewById(R.id.item_icon);
         vh.mItemLinkIcon = v.findViewById(R.id.item_connect_icon);

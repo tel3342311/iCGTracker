@@ -728,6 +728,59 @@ public class GuardianApiClient {
 		}
 		return null;
 	}
+
+	public JSONResponse getStudentLocation(String uuid) {
+
+		Uri uri = mUri.buildUpon().appendPath(Def.REQUEST_GET_CHILDREN_LOCATION).
+				appendPath(mToken).
+				appendPath(uuid).build();
+		HttpURLConnection urlConnection = null;
+		OutputStream os = null;
+		InputStream is = null;
+		try {
+
+			URL url = new URL(uri.toString());
+			urlConnection = (HttpURLConnection) url.openConnection();
+			urlConnection.setRequestMethod("GET");
+			urlConnection.setRequestProperty("Content-Type", "application/json");
+			urlConnection.setDoInput(true);
+			urlConnection.setDoOutput(false);
+			urlConnection.setUseCaches(false);
+
+			int status = urlConnection.getResponseCode();
+			if (status == HttpURLConnection.HTTP_OK) {
+				is = urlConnection.getInputStream();
+				JSONResponse result = (JSONResponse) getResponseJSON(is, JSONResponse.class);
+				is.close();
+				String statusCode = result.getReturn().getResponseSummary().getStatusCode();
+				if (TextUtils.equals(statusCode, Def.RET_SUCCESS_2) || TextUtils.equals(statusCode, Def.RET_SUCCESS_1)) {
+					if (result.getReturn().getResults() != null) {
+						Log.e(TAG, "lat: " + result.getReturn().getResults().getLatitude() + ", longtitude " + result.getReturn().getResults().getLongitude());
+					} else {
+						Log.e(TAG, "status code: " + statusCode+ ", Error message: " + result.getReturn().getResponseSummary().getErrorMessage());
+					}
+				} else {
+					Log.e(TAG, "status code: " + statusCode+ ", Error message: " + result.getReturn().getResponseSummary().getErrorMessage());
+				}
+				return result;
+			} else {
+				showError(status);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (urlConnection != null) {
+				try {
+					urlConnection.getInputStream().close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				urlConnection.disconnect();
+			}
+		}
+		return null;
+	}
 	
 	public JSONResponse getUserDetail() {
 

@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.AppCompatButton;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -71,5 +73,12 @@ public class SelectURLDialog extends DialogFragment {
 
 	public void setBtnConfirm(View.OnClickListener mClickListener) {
 		mConfirmListener = mClickListener;
+	}
+
+	@Override
+	public void show(FragmentManager manager, String tag) {
+		FragmentTransaction fragmentTransaction = manager.beginTransaction();
+		fragmentTransaction.add(this, tag);
+		fragmentTransaction.commitAllowingStateLoss();
 	}
 }

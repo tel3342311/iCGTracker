@@ -1,12 +1,17 @@
 package icgtracker.liteon.com.iCGTracker.fragment;
 
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +28,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.w3c.dom.Text;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -33,9 +40,12 @@ import icgtracker.liteon.com.iCGTracker.App;
 import icgtracker.liteon.com.iCGTracker.MainActivity;
 import icgtracker.liteon.com.iCGTracker.R;
 import icgtracker.liteon.com.iCGTracker.db.DBHelper;
+import icgtracker.liteon.com.iCGTracker.service.DataSyncService;
+import icgtracker.liteon.com.iCGTracker.util.ChildLocationItem;
 import icgtracker.liteon.com.iCGTracker.util.Def;
 import icgtracker.liteon.com.iCGTracker.util.GuardianApiClient;
 import icgtracker.liteon.com.iCGTracker.util.JSONResponse;
+import icgtracker.liteon.com.iCGTracker.util.Utils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,6 +64,8 @@ public class SafeFragment extends Fragment {
     private String mLastPositionUpdateTime;
     private TextView mUpdateTime;
     private DBHelper mDbHelper;
+    private SharedPreferences mSharePreference;
+    private LocalBroadcastManager mLocalBroadcastManager;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -114,6 +126,9 @@ public class SafeFragment extends Fragment {
         setListener();
         mDbHelper = DBHelper.getInstance(getActivity());
         mStudents = mDbHelper.queryChildList(mDbHelper.getReadableDatabase());
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(App.getContext());
+        mSharePreference = getActivity().getSharedPreferences(Def.SHARE_PREFERENCE, Context.MODE_PRIVATE);
+        mCurrnetStudentIdx = mSharePreference.getInt(Def.SP_CURRENT_STUDENT, 0);
         return mRootView;
     }
 
@@ -129,7 +144,10 @@ public class SafeFragment extends Fragment {
             if (mGoogleMap != null) {
                 CameraUpdate _cameraUpdate = CameraUpdateFactory.newLatLngZoom(mLatlng, 16.f);
                 mGoogleMap.animateCamera(_cameraUpdate);
-                new getCurrentLocation().execute();
+                Intent startIntent = new Intent(App.getContext(), DataSyncService.class);
+                startIntent.setAction(Def.ACTION_GET_LOCATION);
+                startIntent.putExtra(Def.KEY_UUID, mStudents.get(mCurrnetStudentIdx).getUuid());
+                getActivity().startService(startIntent);
             }
         });
     }
@@ -139,6 +157,17 @@ public class SafeFragment extends Fragment {
         if (mMapView != null) {
             mMapView.onResume();
         }
+        mCurrnetStudentIdx = mSharePreference.getInt(Def.SP_CURRENT_STUDENT, 0);
+
+        Intent startIntent = new Intent(App.getContext(), DataSyncService.class);
+        startIntent.setAction(Def.ACTION_GET_LOCATION);
+        startIntent.putExtra(Def.KEY_UUID, mStudents.get(mCurrnetStudentIdx).getUuid());
+        getActivity().startService(startIntent);
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Def.ACTION_ERROR_NOTIFY);
+        filter.addAction(Def.ACTION_GET_LOCATION);
+        mLocalBroadcastManager.registerReceiver(mReceiver, filter);
     }
 
     @Override
@@ -147,6 +176,7 @@ public class SafeFragment extends Fragment {
         if (mMapView != null) {
             mMapView.onPause();
         }
+        mLocalBroadcastManager.unregisterReceiver(mReceiver);
     }
 
     @Override
@@ -176,8 +206,32 @@ public class SafeFragment extends Fragment {
             mMarker = mGoogleMap.addMarker(markerOptions);
             CameraUpdate _cameraUpdate = CameraUpdateFactory.newLatLngZoom(mLatlng, 16.f);
             mGoogleMap.moveCamera(_cameraUpdate);
-            new getCurrentLocation().execute();
+            //new getCurrentLocation().execute();
         });
+    }
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (TextUtils.equals(Def.ACTION_ERROR_NOTIFY, intent.getAction())) {
+                String error = intent.getStringExtra(Def.EXTRA_ERROR_MESSAGE);
+                Utils.showErrorDialog(error);
+            } else if (TextUtils.equals(Def.ACTION_GET_LOCATION, intent.getAction())) {
+                ChildLocationItem item = mDbHelper.getChildLocationByID(mDbHelper.getReadableDatabase(), mStudents.get(mCurrnetStudentIdx).getUuid());
+                mLatlng = item.getLatlng();
+                mUpdateTime.setText(item.getDate());
+                updateMap();
+            }
+        }
+    };
+
+    private void updateMap() {
+        if (mGoogleMap != null) {
+            mGoogleMap.clear();
+            mGoogleMap.addMarker(new MarkerOptions().position(mLatlng).title("最後位置"));
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mLatlng, 16);
+            mGoogleMap.moveCamera(cameraUpdate);
+        }
     }
 
     class getCurrentLocation extends AsyncTask<String, Void, String> {

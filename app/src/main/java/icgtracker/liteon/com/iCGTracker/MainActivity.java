@@ -37,6 +37,7 @@ import icgtracker.liteon.com.iCGTracker.util.BottomNavigationViewHelper;
 import icgtracker.liteon.com.iCGTracker.util.Def;
 import icgtracker.liteon.com.iCGTracker.util.FenceEntyAdapter;
 import icgtracker.liteon.com.iCGTracker.util.JSONResponse;
+import icgtracker.liteon.com.iCGTracker.util.RecordEventItem;
 import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity {
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private View mDrawerHeader;
     private DBHelper mDbHelper;
     private List<JSONResponse.Student> mStudents;
-    private int mCurrnetStudentIdx;
+    private int mCurrentStudentIdx;
     private TextView mChildName;
     private RecyclerView mDrawerList;
     private RecyclerView.Adapter mDrawerAdapter;
@@ -143,8 +144,35 @@ public class MainActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);
         mDrawerList.setLayoutManager(mLayoutManager);
         updateDrawerData();
-        mDrawerAdapter = new AppDrawerItemAdapter(mDataset, v -> {}, mStudents.get(mCurrnetStudentIdx).getNickname());
+        mDrawerAdapter = new AppDrawerItemAdapter(mDataset, itemSelect -> {
+
+            switchAccount();
+
+        }, "");
         mDrawerList.setAdapter(mDrawerAdapter);
+    }
+
+    private void switchAccount() {
+        if (mStudents.size() == 0) {
+            return;
+        }
+        if (mStudents.size() == 1) {
+            mCurrentStudentIdx = 0;
+        } else {
+
+            if (mCurrentStudentIdx == mStudents.size() - 1) {
+                mCurrentStudentIdx = 0;
+            } else {
+                mCurrentStudentIdx++;
+            }
+        }
+        updateDrawerData();
+
+        SharedPreferences.Editor editor = getSharedPreferences(Def.SHARE_PREFERENCE, Context.MODE_PRIVATE).edit();
+        editor.putInt(Def.SP_CURRENT_STUDENT, mCurrentStudentIdx);
+        editor.commit();
+        mDrawerLayout.closeDrawers();
+        showSplashPage();
     }
 
     private void updateDrawerData() {
@@ -195,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (mStudents != null && mStudents.size() > 0) {
-            String name = mStudents.get(mCurrnetStudentIdx).getNickname();
+            String name = mStudents.get(mCurrentStudentIdx).getNickname();
             mChildName.setText(name);
         }
     }
