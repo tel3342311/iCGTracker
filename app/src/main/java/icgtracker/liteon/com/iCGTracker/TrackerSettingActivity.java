@@ -71,7 +71,9 @@ public class TrackerSettingActivity extends AppCompatActivity {
             intent.putExtra(Def.EXTRA_STUDENT_NAME, mStudentName);
             startActivity(intent);
         } else if (item.getItemType() == TrackerInfoItem.TYPE.DEVICE_INFO){
-
+            Intent intent = new Intent();
+            intent.setClass(this, DeviceInfoActivity.class);
+            startActivity(intent);
         }
     };
 

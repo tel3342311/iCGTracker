@@ -100,4 +100,15 @@
     <string name="setup_kid_cm">公分</string>
     <string name="setup_kid_weight">體重</string>
     <string name="setup_kid_kg">公斤</string>
+    <string name="device_model_title">裝置型號 :</string>
+    <string name="firmware_title">韌體版本 :</string>
+    <string name="device_bound">解除綁定</string>
+    <string name="fw_update">韌體更新</string>
+    <string name="bt_report_title">位置回報頻率(分鐘)</string>
+    <string name="bt_report_sub_title">位置回報頻率將影響裝置使用時間長短</string>
+    <string name="bt_search_title">藍牙貼心功能</string>
+    <string name="bt_search_sub_title">藍牙尋物：尋找附近以配對裝置位置\n藍芽防丟：避免手機與裝置超過警戒距離</string>
+    <string name="bt_search">藍牙尋物</string>
+    <string name="bt_close">關閉</string>
+    <string name="bt_keep">藍芽防丟</string>
 </resources>

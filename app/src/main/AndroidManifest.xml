@@ -37,15 +37,15 @@
         <activity
             android:name=".EditFenceActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UserSettingActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UserRegistrationActivity"
             android:label="@string/app_name"
@@ -107,7 +107,9 @@
 
         <service
             android:name=".service.DataSyncService"
-            android:exported="false"></service>
+            android:exported="false" />
+
+        <activity android:name=".DeviceInfoActivity"></activity>
     </application>
 
 </manifest>
