@@ -68,23 +68,18 @@ public class ChildInfoUpdateActivity extends AppCompatActivity implements IProfi
 		findViews();
 		setupToolbar();
 		setListener();
-		initRecycleView();
+
         mDbHelper = DBHelper.getInstance(this);
         mStudentName = getIntent().getStringExtra(Def.EXTRA_STUDENT_NAME);
-		mTitleView.setText(String.format(getString(R.string.tracker_setting),mStudentName));
 		mName.setText(mStudentName);
+        initRecycleView();
     }
 	
 	private Student createChild() {
-		Student student = new Student();
-        student.setStudent_id((int)Calendar.getInstance().getTime().getTime());
-		student.setDob("2000-01-01");
-		student.setName("");
-		student.setGender(getString(R.string.setup_kid_male));
-		student.setHeight("0");
-		student.setWeight("0");
+        Student student = mDbHelper.queryChildByName(mDbHelper.getReadableDatabase(), mStudentName);
 		return student;
 	}
+
 	private void initRecycleView() {
 		mRecyclerView.setHasFixedSize(true);
 		mLayoutManager = new LinearLayoutManager(this);
@@ -346,7 +341,7 @@ public class ChildInfoUpdateActivity extends AppCompatActivity implements IProfi
 		@Override
         protected String doInBackground(String... args) {
 
-            mDbHelper.insertChild(mDbHelper.getWritableDatabase(), mStudent);
+            mDbHelper.replaceChild(mDbHelper.getWritableDatabase(), mStudent);
             List<Student> studentList = mDbHelper.queryChildList(mDbHelper.getReadableDatabase());
             for (int idx = 0; idx < studentList.size();idx++) {
                 if (TextUtils.equals(studentList.get(idx).getStudent_id(), mStudent.getStudent_id())) {

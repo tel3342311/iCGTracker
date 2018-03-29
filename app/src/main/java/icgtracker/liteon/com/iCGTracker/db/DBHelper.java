@@ -316,6 +316,28 @@ public class DBHelper extends SQLiteOpenHelper {
 		return list;
 	}
 
+	public Student queryChildByName(SQLiteDatabase db, String nickName) {
+        Cursor cursor = db.query(ChildEntry.TABLE_NAME, null, "nick_name =?",
+                new String[] { nickName }, null, null, null, null);
+        Student item = null;
+        if (cursor.moveToFirst()) { // if the row exist then return the id
+            item = new Student();
+            item.setUuid(cursor.getString(cursor.getColumnIndex(ChildEntry.COLUMN_NAME_UUID)));
+            item.setName(cursor.getString(cursor.getColumnIndex(ChildEntry.COLUMN_NAME_GIVEN_NAME)));
+            item.setNickname(cursor.getString(cursor.getColumnIndex(ChildEntry.COLUMN_NAME_NICK_NAME)));
+            item.setGender(cursor.getString(cursor.getColumnIndex(ChildEntry.COLUMN_NAME_GENDER)));
+            item.setDob(cursor.getString(cursor.getColumnIndex(ChildEntry.COLUMN_NAME_DOB)));
+            item.setHeight(Integer.toString(cursor.getInt(cursor.getColumnIndex(ChildEntry.COLUMN_NAME_HEIGHT))));
+            item.setWeight(Integer.toString(cursor.getInt(cursor.getColumnIndex(ChildEntry.COLUMN_NAME_WEIGHT))));
+            item.setRoll_no(Integer.parseInt(cursor.getString(cursor.getColumnIndex(ChildEntry.COLUMN_NAME_ROLL_NO))));
+            item.set_class(cursor.getString(cursor.getColumnIndex(ChildEntry.COLUMN_NAME_CLASS)));
+            item.setStudent_id(Integer.parseInt(cursor.getString(cursor.getColumnIndex(ChildEntry.COLUMN_NAME_STUDENT_ID))));
+        }
+        cursor.close();
+        db.close();
+        return item;
+    }
+
     public void insertChild(SQLiteDatabase db, Student item) {
         ContentValues cv = new ContentValues();
         cv.put(ChildEntry.COLUMN_NAME_UUID, item.getUuid());
@@ -328,6 +350,21 @@ public class DBHelper extends SQLiteOpenHelper {
 		cv.put(ChildEntry.COLUMN_NAME_WEIGHT, item.getWeight());
 
         long ret = db.insert(ChildEntry.TABLE_NAME, null, cv);
+        Log.d(DATABASE_NAME, "insert " + item.getNickname() + "RET is " + ret);
+    }
+
+    public void replaceChild(SQLiteDatabase db, Student item) {
+        ContentValues cv = new ContentValues();
+        cv.put(ChildEntry.COLUMN_NAME_UUID, item.getUuid());
+        cv.put(ChildEntry.COLUMN_NAME_NICK_NAME, item.getNickname());
+        cv.put(ChildEntry.COLUMN_NAME_ROLL_NO, item.getRoll_no());
+        cv.put(ChildEntry.COLUMN_NAME_STUDENT_ID, item.getStudent_id());
+        cv.put(ChildEntry.COLUMN_NAME_GENDER, item.getGender());
+        cv.put(ChildEntry.COLUMN_NAME_DOB, item.getDob());
+        cv.put(ChildEntry.COLUMN_NAME_HEIGHT, item.getHeight());
+        cv.put(ChildEntry.COLUMN_NAME_WEIGHT, item.getWeight());
+
+        long ret = db.replace(ChildEntry.TABLE_NAME, null, cv);
         Log.d(DATABASE_NAME, "insert " + item.getNickname() + "RET is " + ret);
     }
 	
