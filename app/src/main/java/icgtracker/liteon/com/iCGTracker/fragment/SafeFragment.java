@@ -57,7 +57,7 @@ public class SafeFragment extends Fragment {
     private MapView mMapView;
     private GoogleMap mGoogleMap;
     private Marker mMarker;
-    private LatLng mLatlng = new LatLng(25.077877, 121.571141);
+    private LatLng mLatlng;
     private FloatingActionButton mLocationButton;
     private List<JSONResponse.Student> mStudents;
     private int mCurrnetStudentIdx;
@@ -142,8 +142,10 @@ public class SafeFragment extends Fragment {
     private void setListener() {
         mLocationButton.setOnClickListener( v -> {
             if (mGoogleMap != null) {
-                CameraUpdate _cameraUpdate = CameraUpdateFactory.newLatLngZoom(mLatlng, 16.f);
-                mGoogleMap.animateCamera(_cameraUpdate);
+                if (mLatlng != null) {
+                    CameraUpdate _cameraUpdate = CameraUpdateFactory.newLatLngZoom(mLatlng, 16.f);
+                    mGoogleMap.animateCamera(_cameraUpdate);
+                }
                 Intent startIntent = new Intent(App.getContext(), DataSyncService.class);
                 startIntent.setAction(Def.ACTION_GET_LOCATION);
                 startIntent.putExtra(Def.KEY_UUID, mStudents.get(mCurrnetStudentIdx).getUuid());
@@ -198,13 +200,7 @@ public class SafeFragment extends Fragment {
     private void initMapComponent() {
         mMapView.getMapAsync(googleMap -> {
             mGoogleMap = googleMap;
-
-            MarkerOptions markerOptions = new MarkerOptions().position(mLatlng);
-            if (mMarker != null) {
-                mGoogleMap.clear();
-            }
-            mMarker = mGoogleMap.addMarker(markerOptions);
-            CameraUpdate _cameraUpdate = CameraUpdateFactory.newLatLngZoom(mLatlng, 16.f);
+            CameraUpdate _cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(25.077877, 121.571141), 16.f);
             mGoogleMap.moveCamera(_cameraUpdate);
             //new getCurrentLocation().execute();
         });
@@ -218,8 +214,13 @@ public class SafeFragment extends Fragment {
                 Utils.showErrorDialog(error);
             } else if (TextUtils.equals(Def.ACTION_GET_LOCATION, intent.getAction())) {
                 ChildLocationItem item = mDbHelper.getChildLocationByID(mDbHelper.getReadableDatabase(), mStudents.get(mCurrnetStudentIdx).getUuid());
-                mLatlng = item.getLatlng();
-                mUpdateTime.setText(item.getDate());
+                if (item != null) {
+                    mLatlng = item.getLatlng();
+                    mUpdateTime.setText(item.getDate());
+                } else {
+                    mLatlng = null;
+                    mUpdateTime.setText(R.string.no_gps_data);
+                }
                 updateMap();
             }
         }
@@ -228,8 +229,13 @@ public class SafeFragment extends Fragment {
     private void updateMap() {
         if (mGoogleMap != null) {
             mGoogleMap.clear();
-            mGoogleMap.addMarker(new MarkerOptions().position(mLatlng).title("最後位置"));
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mLatlng, 16);
+            CameraUpdate cameraUpdate;
+            if (mLatlng != null) {
+                mMarker = mGoogleMap.addMarker(new MarkerOptions().position(mLatlng).title("最後位置"));
+                cameraUpdate = CameraUpdateFactory.newLatLngZoom(mLatlng, 16);
+            } else {
+                cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(25.077877, 121.571141), 16);
+            }
             mGoogleMap.moveCamera(cameraUpdate);
         }
     }

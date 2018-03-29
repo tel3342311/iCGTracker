@@ -81,4 +81,23 @@
     <string name="update_failed_confirm">好</string>
     <string name="wrong_password">原密碼錯誤</string>
     <string name="password_not_match">密碼與確認密碼不相同</string>
+    <string name="no_gps_data">查無GPS資料</string>
+    <string name="tracker_setting">%s設定</string>
+    <string name="tracker_info">珍愛者資訊</string>
+    <string name="device_info">裝置資訊</string>
+
+    <!-- setup kid profile -->
+    <string name="setup_kid_profile">設定寶貝基本資料</string>
+    <string name="setup_kid_name">小孩姓名</string>
+    <string name="setup_kid_birthday">生日</string>
+    <string name="setup_kid_year">年</string>
+    <string name="setup_kid_month">月</string>
+    <string name="setup_kid_day">日</string>
+    <string name="setup_kid_gender">性別</string>
+    <string name="setup_kid_male">男生</string>
+    <string name="setup_kid_female">女生</string>
+    <string name="setup_kid_height">身高</string>
+    <string name="setup_kid_cm">公分</string>
+    <string name="setup_kid_weight">體重</string>
+    <string name="setup_kid_kg">公斤</string>
 </resources>

@@ -127,6 +127,7 @@ public class Def {
 	//Choose photo TYPE
 	public static final String EXTRA_CHOOSE_CHILD_ICON = "child_icon";
 	public static final String EXTRA_CHOOSE_WATCH_ICON = "watch_icon";
+	public static final String EXTRA_STUDENT_NAME = "student_name";
 	/**
 	 * =================================================================
 	 *

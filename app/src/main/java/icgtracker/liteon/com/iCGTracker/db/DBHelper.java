@@ -386,7 +386,7 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(ChildLocationEntry.COLUMN_NAME_LATITUDE, item.getLatlng().latitude);
         cv.put(ChildLocationEntry.COLUMN_NAME_LONGITUDE, item.getLatlng().longitude);
-        cv.put(ChildLocationEntry.COLUMN_NAME_UPDATE_TIME, Calendar.getInstance().getTimeInMillis());
+        cv.put(ChildLocationEntry.COLUMN_NAME_UPDATE_TIME, item.getDate());
         cv.put(ChildLocationEntry.COLUMN_NAME_UUID, item.getUuid());
 	    db.replace(ChildLocationEntry.TABLE_NAME, null, cv);
         db.close();

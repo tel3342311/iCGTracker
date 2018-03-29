@@ -144,15 +144,33 @@ public class MainActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);
         mDrawerList.setLayoutManager(mLayoutManager);
         updateDrawerData();
-        mDrawerAdapter = new AppDrawerItemAdapter(mDataset, itemSelect -> {
-
-            switchAccount();
-
-        }, "");
+        mDrawerAdapter = new AppDrawerItemAdapter(mDataset, (v,itemSelect) -> onDrawitemClick(v,itemSelect), "");
         mDrawerList.setAdapter(mDrawerAdapter);
     }
 
+    private void onDrawitemClick(View v, AppDrawerItem item) {
+        if (v.getId() == R.id.item_connect_icon) {
+            Intent intent = new Intent();
+            intent.putExtra(Def.EXTRA_STUDENT_NAME, item.getValue());
+            intent.setClass(this, TrackerSettingActivity.class);
+            startActivity(intent);
+        } else {
+            if (item.getItemType() == AppDrawerItem.TYPE.ADD_USER){
+
+            } else if (item.getItemType() == AppDrawerItem.TYPE.DELETE_USER){
+
+            } else {
+                if (TextUtils.equals(item.getValue(), mStudents.get(mCurrentStudentIdx).getNickname())){
+                    mDrawerLayout.closeDrawers();
+                } else {
+                    switchAccount();
+                }
+            }
+        }
+    }
+
     private void switchAccount() {
+        showSplashPage();
         if (mStudents.size() == 0) {
             return;
         }
@@ -172,17 +190,21 @@ public class MainActivity extends AppCompatActivity {
         editor.putInt(Def.SP_CURRENT_STUDENT, mCurrentStudentIdx);
         editor.commit();
         mDrawerLayout.closeDrawers();
-        showSplashPage();
+        mDrawerAdapter.notifyDataSetChanged();
     }
 
     private void updateDrawerData() {
 
+        mDataset.clear();
         int i = 0;
         AppDrawerItem item;
         for (JSONResponse.Student student : mStudents) {
             item = new AppDrawerItem();
             item.setItemType(AppDrawerItem.TYPE.USER);
             item.setValue(student.getNickname());
+            if (mStudents.indexOf(student) == mCurrentStudentIdx) {
+                item.setSelect(true);
+            }
             mDataset.add(i++, item);
         }
         item = new AppDrawerItem();
@@ -191,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
 
         item = new AppDrawerItem();
         item.setItemType(AppDrawerItem.TYPE.DELETE_USER);
+        item.setValue(String.format(getString(R.string.delete_tracker), mStudents.get(mCurrentStudentIdx).getNickname()));
         mDataset.add(i, item);
     }
 
@@ -219,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
         if (mBottomView.getSelectedItemId() != 0) {
             mBottomView.setSelectedItemId(mBottomView.getSelectedItemId());
         } else {
-            mBottomView.setSelectedItemId(R.id.action_safety);
+            //mBottomView.setSelectedItemId(R.id.action_safety);
         }
 
         if (mStudents != null && mStudents.size() > 0) {

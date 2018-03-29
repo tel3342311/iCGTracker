@@ -58,6 +58,14 @@
             android:name=".RegisteredActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".TrackerSettingActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ChildInfoUpdateActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
 
         <!-- For FCM -->
         <service android:name=".service.GuardianMessagingService">

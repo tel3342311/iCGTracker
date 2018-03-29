@@ -20,17 +20,11 @@ public class AppDrawerItemAdapter extends Adapter<AppDrawerItemAdapter.ViewHolde
 
 	private ViewHolder.IDrawerViewHolderClicks mClickListener;
 	private List<AppDrawerItem> mDataset;
-	private String mTrackerName;
-
-	public void setCurrentTrackerName(String trackerName) {
-		this.mTrackerName = trackerName;
-	}
 
 	public static class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener{
         // each data item is just a string in this case
         public View mRootView;
         public TextView mTitleTextView;
-        public TextView mValueTextView;
         public ImageView mItemIcon;
         public ImageView mItemLinkIcon;
         private AppDrawerItem mItem;
@@ -42,18 +36,17 @@ public class AppDrawerItemAdapter extends Adapter<AppDrawerItemAdapter.ViewHolde
         }
 		@Override
 		public void onClick(View v) {
-			mClicks.onClick(mItem);
+			mClicks.onClick(v, mItem);
 		}
 
 		public static interface IDrawerViewHolderClicks {
-	        public void onClick(AppDrawerItem item);
+	        public void onClick(View v, AppDrawerItem item);
 	    }
     }
 
     public AppDrawerItemAdapter(List<AppDrawerItem> appInfoDataset, ViewHolder.IDrawerViewHolderClicks clicks, String trackerName) {
         mDataset = appInfoDataset;
         mClickListener = clicks;
-        mTrackerName = trackerName;
     }
     
 	@Override
@@ -64,12 +57,12 @@ public class AppDrawerItemAdapter extends Adapter<AppDrawerItemAdapter.ViewHolde
 	@Override
 	public void onBindViewHolder(ViewHolder holder, int position) {
         AppDrawerItem item = mDataset.get(position);
-        holder.mTitleTextView.setText(item.getTitle());
         if (item.getItemType() == AppDrawerItem.TYPE.DELETE_USER) {
-        	holder.mTitleTextView.setText(String.format(App.getContext().getString(R.string.delete_tracker),mTrackerName));
+        	holder.mTitleTextView.setText(item.getValue());
         	holder.mItemIcon.setBackground(ContextCompat.getDrawable(App.getContext(), R.drawable.menu_img_delete));
             holder.mRootView.setBackgroundColor(ContextCompat.getColor(App.getContext(),R.color.md_grey_300));
         } else if (item.getItemType() == AppDrawerItem.TYPE.ADD_USER) {
+            holder.mTitleTextView.setText(item.getTitle());
             holder.mItemIcon.setBackground(ContextCompat.getDrawable(App.getContext(), R.drawable.menu_img_add));
             holder.mRootView.setBackgroundColor(ContextCompat.getColor(App.getContext(),R.color.md_grey_300));
         } else {
@@ -79,6 +72,7 @@ public class AppDrawerItemAdapter extends Adapter<AppDrawerItemAdapter.ViewHolde
                 holder.mTitleTextView.setTextColor(ContextCompat.getColor(App.getContext(),R.color.md_black_1000));
             }
             holder.mTitleTextView.setText(item.getValue());
+            holder.mItemLinkIcon.setVisibility(View.VISIBLE);
         }
         holder.mItem = mDataset.get(position);
 
@@ -95,6 +89,7 @@ public class AppDrawerItemAdapter extends Adapter<AppDrawerItemAdapter.ViewHolde
         vh.mItemIcon = v.findViewById(R.id.item_icon);
         vh.mItemLinkIcon = v.findViewById(R.id.item_connect_icon);
         v.setOnClickListener(vh);
+        vh.mItemLinkIcon.setOnClickListener(vh);
         return vh;
 	}
 }

@@ -1,16 +1,17 @@
 package icgtracker.liteon.com.iCGTracker.util;
 
-
 import icgtracker.liteon.com.iCGTracker.App;
 import icgtracker.liteon.com.iCGTracker.R;
 
-public class AppInfoPrivacyItem {
+public class ProfileItem {
 
 	
 	public static enum TYPE {
-		APP_INFO(App.getContext().getString(R.string.app_ver)),
-        PARENT_INFO(App.getContext().getString(R.string.parent_info)),
-        USER_TERM(App.getContext().getString(R.string.welcome_user_term));
+        BIRTHDAY(App.getContext().getString(R.string.setup_kid_birthday)),
+        GENDER(App.getContext().getString(R.string.setup_kid_gender)),
+        HEIGHT(App.getContext().getString(R.string.setup_kid_height)),
+        WEIGHT(App.getContext().getString(R.string.setup_kid_weight));
+		
 		private String name;
 		private TYPE(String name) {
 			this.name = name;

@@ -59,7 +59,7 @@
         layout:layout_constraintTop_toTopOf="@id/udpate_area"
         layout:layout_constraintBottom_toBottomOf="@id/udpate_area"
         layout:layout_constraintEnd_toEndOf="@id/udpate_area"
-        android:text="2018/01/01 週一 24:59"/>
+        android:text="@string/no_gps_data"/>
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/map_view"

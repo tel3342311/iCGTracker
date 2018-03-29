@@ -118,17 +118,18 @@ public class DataSyncService extends IntentService {
         String uuid = intent.getStringExtra(Def.KEY_UUID);
         JSONResponse response = mApiClient.getStudentLocation(uuid);
         if (response == null) {
-            sendErrorBrocast("GetLocation : NO DATA");
+            sendErrorBrocast("GetLocation : NO RESPONSE");
+            return;
         }
         if (TextUtils.equals(response.getReturn().getResponseSummary().getStatusCode(),Def.RET_SUCCESS_1)) {
             if (response.getReturn().getResults() == null) {
-                sendErrorBrocast("GetLocation : NO DATA");
+                sendBroadcast(new Intent(Def.ACTION_GET_LOCATION));
                 return;
             }
             String lat = response.getReturn().getResults().getLatitude();
             String lnt = response.getReturn().getResults().getLongitude();
             if (TextUtils.isEmpty(lat) || TextUtils.isEmpty(lnt)) {
-                sendErrorBrocast("GetLocation : NO DATA");
+                sendBroadcast(new Intent(Def.ACTION_GET_LOCATION));
                 return;
             }
             String lastPositionUpdateTime = response.getReturn().getResults().getEvent_occured_date();
@@ -180,6 +181,11 @@ public class DataSyncService extends IntentService {
         if (response == null) {
             sendErrorBrocast(getString(R.string.login_error_no_server_connection));
         }
+    }
+
+    public void sendBroadcast(Intent intent) {
+
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     public void sendErrorBrocast(String message) {
