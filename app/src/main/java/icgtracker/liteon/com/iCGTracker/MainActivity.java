@@ -213,7 +213,9 @@ public class MainActivity extends AppCompatActivity {
 
         item = new AppDrawerItem();
         item.setItemType(AppDrawerItem.TYPE.DELETE_USER);
-        item.setValue(String.format(getString(R.string.delete_tracker), mStudents.get(mCurrentStudentIdx).getNickname()));
+        if (mStudents.size() > 0) {
+                item.setValue(String.format(getString(R.string.delete_tracker), mStudents.get(mCurrentStudentIdx).getNickname()));
+        }
         mDataset.add(i, item);
     }
 
