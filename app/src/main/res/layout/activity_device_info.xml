@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize" >
+        android:minHeight="?attr/actionBarSize">
+
         <ImageView
             android:id="@+id/cancel"
             android:layout_width="@dimen/toolbar_icon_size"
@@ -19,15 +20,16 @@
             android:layout_centerVertical="true"
             android:background="@drawable/ic_navigate_before_white_24dp"
             app:backgroundTint="@color/md_white_1000" />
+
         <TextView
             android:id="@+id/page_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
+            android:text="@string/device_info"
             android:textColor="@color/md_white_1000"
-            android:textSize="@dimen/page_title_text_size"
-            android:text="@string/device_info" />
+            android:textSize="@dimen/page_title_text_size" />
 
     </android.support.v7.widget.Toolbar>
 
@@ -39,7 +41,7 @@
         android:layout_marginTop="32dp"
         android:background="@color/md_grey_700"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"  />
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <TextView
         android:id="@+id/model_title"
@@ -125,9 +127,11 @@
         android:id="@+id/bt_report_area"
         layout="@layout/component_device_bt_report_area"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/bt_search_area"
         app:layout_constraintEnd_toEndOf="@id/firmware_update"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@id/device_bound"
         app:layout_constraintTop_toBottomOf="@+id/device_bound" />
 
@@ -135,10 +139,12 @@
         android:id="@+id/bt_search_area"
         layout="@layout/component_device_bt_search_area"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginVertical="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/device_bound"
         app:layout_constraintEnd_toEndOf="@+id/firmware_update"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/device_bound"
         app:layout_constraintTop_toBottomOf="@+id/bt_report_area" />
 
 

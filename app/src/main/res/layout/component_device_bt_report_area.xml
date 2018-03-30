@@ -34,44 +34,52 @@
         layout="@layout/component_fence_size_item"
         android:layout_width="@dimen/fence_size_icon_width"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/device_sub_title"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/report_60_min"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="30dp"/>
+        app:layout_constraintTop_toBottomOf="@id/device_sub_title" />
 
     <include
         android:id="@+id/report_60_min"
         layout="@layout/component_fence_size_item"
         android:layout_width="@dimen/fence_size_icon_width"
         android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintTop_toBottomOf="@id/device_sub_title"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/report_90_min"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/report_30_min" />
+        app:layout_constraintStart_toEndOf="@+id/report_30_min"
+        app:layout_constraintTop_toBottomOf="@id/device_sub_title" />
 
     <include
         android:id="@+id/report_90_min"
         layout="@layout/component_fence_size_item"
         android:layout_width="@dimen/fence_size_icon_width"
         android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintTop_toBottomOf="@id/device_sub_title"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/report_120_min"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/report_60_min" />
+        app:layout_constraintStart_toEndOf="@+id/report_60_min"
+        app:layout_constraintTop_toBottomOf="@id/device_sub_title" />
 
     <include
         android:id="@+id/report_120_min"
         layout="@layout/component_fence_size_item"
         android:layout_width="@dimen/fence_size_icon_width"
         android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="-10dp"
-        app:layout_constraintTop_toBottomOf="@id/device_sub_title"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/report_90_min" />
+        app:layout_constraintStart_toEndOf="@+id/report_90_min"
+        app:layout_constraintTop_toBottomOf="@id/device_sub_title" />
 
 
 </android.support.constraint.ConstraintLayout>

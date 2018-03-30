@@ -1,5 +1,6 @@
 package icgtracker.liteon.com.iCGTracker;
 
+import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -23,7 +24,7 @@ public class DeviceInfoActivity extends AppCompatActivity {
     private View mBTClose;
     private View mBTKeepInRange;
     private TextView mTitle;
-
+    private ImageView mCancel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +49,7 @@ public class DeviceInfoActivity extends AppCompatActivity {
         mBTClose = findViewById(R.id.close_bt);
         mBTKeepInRange = findViewById(R.id.keep_bt);
         mTitle = findViewById(R.id.page_title);
+        mCancel = findViewById(R.id.cancel);
     }
 
     private void setListener() {
@@ -61,6 +63,7 @@ public class DeviceInfoActivity extends AppCompatActivity {
         mBTSearch.setOnClickListener(v -> {});
         mBTClose.setOnClickListener(v -> {});
         mBTKeepInRange.setOnClickListener(v -> {});
+        mCancel.setOnClickListener( v-> onBackPressed());
     }
 
     private void setOptionText() {
