@@ -1,12 +1,18 @@
 package icgtracker.liteon.com.iCGTracker.fragment;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,10 +42,14 @@ import icgtracker.liteon.com.iCGTracker.App;
 import icgtracker.liteon.com.iCGTracker.EditFenceActivity;
 import icgtracker.liteon.com.iCGTracker.R;
 import icgtracker.liteon.com.iCGTracker.db.DBHelper;
+import icgtracker.liteon.com.iCGTracker.service.DataSyncService;
+import icgtracker.liteon.com.iCGTracker.util.ChildLocationItem;
+import icgtracker.liteon.com.iCGTracker.util.Def;
 import icgtracker.liteon.com.iCGTracker.util.FenceEntryItem;
 import icgtracker.liteon.com.iCGTracker.util.FenceEntyAdapter;
 import icgtracker.liteon.com.iCGTracker.util.FenceRangeItem;
 import icgtracker.liteon.com.iCGTracker.util.JSONResponse;
+import icgtracker.liteon.com.iCGTracker.util.Utils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,13 +73,16 @@ public class FenceFragment extends Fragment {
     private Circle mFenceCircle;
     private Marker mMarker;
     private LatLng mLatlng = new LatLng(25.077877, 121.571141);
-    private int mMeter;
+    private float mMeter;
     private List<JSONResponse.Student> mStudents;
     private int mCurrnetStudentIdx;
     private DBHelper mDbHelper;
     private List<FenceRangeItem> mFenceRangeList;
     private int mCurrentFenceIdx;
     private View mNoFenceView;
+    private LocalBroadcastManager mLocalBroadcastManager;
+    private SharedPreferences mSharePreference;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -124,9 +137,11 @@ public class FenceFragment extends Fragment {
         mRootView = inflater.inflate(R.layout.fragment_fence, container, false);
         findViews();
         setListener();
+        mSharePreference = getActivity().getSharedPreferences(Def.SHARE_PREFERENCE, Context.MODE_PRIVATE);
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(App.getContext());
         mDbHelper = DBHelper.getInstance(getActivity());
         mStudents = mDbHelper.queryChildList(mDbHelper.getReadableDatabase());
-        mFenceRangeList = mDbHelper.getFenceItemByStudentID(mDbHelper.getReadableDatabase(), mStudents.get(mCurrnetStudentIdx).getStudent_id());
+        mFenceRangeList = mDbHelper.getFenceItemByUuid(mDbHelper.getReadableDatabase(), mStudents.get(mCurrnetStudentIdx).getUuid());
         if (mFenceRangeList != null && mFenceRangeList.size() > 0) {
             mCurrentFenceIdx = mFenceRangeList.size() - 1;
         }
@@ -319,6 +334,7 @@ public class FenceFragment extends Fragment {
         if (mMapView != null) {
             mMapView.onPause();
         }
+        mLocalBroadcastManager.unregisterReceiver(mReceiver);
     }
 
     @Override
@@ -335,12 +351,25 @@ public class FenceFragment extends Fragment {
         if (mMapView != null) {
             mMapView.onResume();
         }
-        mFenceRangeList = mDbHelper.getFenceItemByStudentID(mDbHelper.getReadableDatabase(), mStudents.get(mCurrnetStudentIdx).getStudent_id());
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Def.ACTION_ERROR_NOTIFY);
+        filter.addAction(Def.ACTION_LIST_FENCE);
+        mLocalBroadcastManager.registerReceiver(mReceiver, filter);
+
+        mCurrnetStudentIdx = mSharePreference.getInt(Def.SP_CURRENT_STUDENT, 0);
+
+        mFenceRangeList = mDbHelper.getFenceItemByUuid(mDbHelper.getReadableDatabase(), mStudents.get(mCurrnetStudentIdx).getUuid());
         if (mFenceRangeList != null && mFenceRangeList.size() > 0) {
             mCurrentFenceIdx = mFenceRangeList.size() - 1;
             mNoFenceView.setVisibility(View.GONE);
         } else {
             mNoFenceView.setVisibility(View.VISIBLE);
+        }
+        if (mStudents.size() > 0 && mCurrnetStudentIdx < mStudents.size()) {
+            Intent startIntent = new Intent(App.getContext(), DataSyncService.class);
+            startIntent.setAction(Def.ACTION_LIST_FENCE);
+            startIntent.putExtra(Def.KEY_UUID, mStudents.get(mCurrnetStudentIdx).getUuid());
+            getActivity().startService(startIntent);
         }
         updateMap();
     }
@@ -352,4 +381,23 @@ public class FenceFragment extends Fragment {
             mMapView.onStop();
         }
     }
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (TextUtils.equals(Def.ACTION_ERROR_NOTIFY, intent.getAction())) {
+                String error = intent.getStringExtra(Def.EXTRA_ERROR_MESSAGE);
+                Utils.showErrorDialog(error);
+            } else if (TextUtils.equals(Def.ACTION_LIST_FENCE, intent.getAction())) {
+                mFenceRangeList = mDbHelper.getFenceItemByUuid(mDbHelper.getReadableDatabase(), mStudents.get(mCurrnetStudentIdx).getUuid());
+                if (mFenceRangeList != null && mFenceRangeList.size() > 0) {
+                    mCurrentFenceIdx = mFenceRangeList.size() - 1;
+                    mNoFenceView.setVisibility(View.GONE);
+                } else {
+                    mNoFenceView.setVisibility(View.VISIBLE);
+                }
+                updateMap();
+            }
+        }
+    };
 }

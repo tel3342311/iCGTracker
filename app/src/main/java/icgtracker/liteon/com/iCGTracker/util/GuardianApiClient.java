@@ -878,16 +878,10 @@ public class GuardianApiClient {
         return null;
     }
 
-    public JSONResponse getHealthyData(JSONResponse.Student student, String startDate , String endDate) {
-        Uri.Builder builder = new Uri.Builder();
-        //To use Web API 02 StudentActivity
-	    Uri uri = builder.scheme("http")
-                .encodedAuthority(mUri.getEncodedAuthority())
-                .appendPath("icgcloud")
-                .appendPath("web")
-                .appendPath(Def.REQUEST_STUDENT_ACTIVITY)
-                .appendPath(mToken).build();
-
+    public JSONResponse createFence(String uuid, String fenceTitle, float fenceRadius , String latlng, int report_freq) {
+        Uri uri = mUri.buildUpon().appendPath(Def.REQUEST_CREATE_FENCE).
+                appendPath(mToken).
+                appendPath(uuid).build();
         HttpURLConnection urlConnection = null;
         OutputStream os = null;
         InputStream is = null;
@@ -902,12 +896,14 @@ public class GuardianApiClient {
             urlConnection.setUseCaches(false);
 
             JSONObject jsonParam = new JSONObject();
-
-            jsonParam.put(Def.KEY_MEASURE_TYPE, "fitness, steps, activity, heartrate, calories, sleep");
-            jsonParam.put(Def.KEY_START_DATE, startDate);
-            jsonParam.put(Def.KEY_END_DATE, endDate);
-            jsonParam.put(Def.KEY_STUDENT_ID, student.getStudent_id());
-
+            jsonParam.put(Def.KEY_ZONE_DETAIL, latlng);
+            jsonParam.put(Def.KEY_ZONE_RADIUS, fenceRadius);
+            jsonParam.put(Def.KEY_ZONE_NAME, fenceTitle);
+            jsonParam.put(Def.KEY_ZONE_ENTRY_ALERT, "yes");
+            jsonParam.put(Def.KEY_ZONE_EXIT_ALERT, "yes");
+            jsonParam.put(Def.KEY_ZONE_DESC, "ICG TRACKER");
+            jsonParam.put(Def.KEY_VALID_TILL, "2017-08-27");
+            jsonParam.put(Def.KEY_FREQ_MIN, 5);
             os = urlConnection.getOutputStream();
             BufferedWriter writer = new BufferedWriter(
                     new OutputStreamWriter(os, "UTF-8"));
@@ -922,8 +918,8 @@ public class GuardianApiClient {
                 JSONResponse result = (JSONResponse) getResponseJSON(is, JSONResponse.class);
                 is.close();
                 String statusCode = result.getReturn().getResponseSummary().getStatusCode();
-                if (TextUtils.equals(statusCode, Def.RET_SUCCESS_2) || TextUtils.equals(statusCode, Def.RET_SUCCESS_1)) {
-
+                if (TextUtils.equals(statusCode, Def.RET_SUCCESS_1)) {
+                    Log.e(TAG, "status code: " + statusCode+ ", Error message: " + result.getReturn().getResponseSummary().getErrorMessage());
                 } else {
                     Log.e(TAG, "status code: " + statusCode+ ", Error message: " + result.getReturn().getResponseSummary().getErrorMessage());
                 }
@@ -935,6 +931,50 @@ public class GuardianApiClient {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                try {
+                    urlConnection.getInputStream().close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                urlConnection.disconnect();
+            }
+        }
+        return null;
+    }
+
+    public JSONResponse listGeoFence(String uuid) {
+        Uri uri = mUri.buildUpon().appendPath(Def.REQUEST_LIST_FENCE).
+                appendPath(mToken).
+                appendPath(uuid).build();
+        HttpURLConnection urlConnection = null;
+        OutputStream os = null;
+        InputStream is = null;
+        try {
+
+            URL url = new URL(uri.toString());
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setRequestProperty("Content-Type", "application/json");
+            urlConnection.setDoInput(true);
+            urlConnection.setDoOutput(false);
+            urlConnection.setUseCaches(false);
+
+            int status = urlConnection.getResponseCode();
+            if (status == HttpURLConnection.HTTP_OK) {
+                is = urlConnection.getInputStream();
+                JSONResponse result = (JSONResponse) getResponseJSON(is, JSONResponse.class);
+                is.close();
+                String statusCode = result.getReturn().getResponseSummary().getStatusCode();
+                Log.e(TAG, "status code: " + statusCode+ ", Error message: " + result.getReturn().getResponseSummary().getErrorMessage());
+                return result;
+            } else {
+                showError(status);
+            }
+
+        } catch (IOException e) {
             e.printStackTrace();
         } finally {
             if (urlConnection != null) {

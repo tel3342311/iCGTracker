@@ -1,7 +1,8 @@
 package icgtracker.liteon.com.iCGTracker;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +26,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.List;
 
 import icgtracker.liteon.com.iCGTracker.db.DBHelper;
+import icgtracker.liteon.com.iCGTracker.service.DataSyncService;
+import icgtracker.liteon.com.iCGTracker.util.Def;
 import icgtracker.liteon.com.iCGTracker.util.FenceRangeItem;
 import icgtracker.liteon.com.iCGTracker.util.JSONResponse;
 import icgtracker.liteon.com.iCGTracker.util.Utils;
@@ -54,6 +57,7 @@ public class EditFenceActivity extends AppCompatActivity {
     private List<JSONResponse.Student> mStudents;
     private int mCurrnetStudentIdx;
     private DBHelper mDbHelper;
+    private SharedPreferences mSharePreference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +71,7 @@ public class EditFenceActivity extends AppCompatActivity {
         }
         mDbHelper = DBHelper.getInstance(this);
         mStudents = mDbHelper.queryChildList(mDbHelper.getReadableDatabase());
+        mSharePreference = getSharedPreferences(Def.SHARE_PREFERENCE, Context.MODE_PRIVATE);
     }
 
     private void initMapComponent() {
@@ -112,10 +117,10 @@ public class EditFenceActivity extends AppCompatActivity {
     private void setListener() {
         mCancel.setOnClickListener(v->onBackPressed());
         mConfirm.setOnClickListener(v->onFenceAdd());
-        mBtn100meter.setOnClickListener(v->onFenceRangeChange(100));
-        mBtn200meter.setOnClickListener(v->onFenceRangeChange(200));
-        mBtn500meter.setOnClickListener(v->onFenceRangeChange(500));
-        mBtn1000meter.setOnClickListener(v->onFenceRangeChange(1000));
+        mBtn100meter.setOnClickListener(v->onFenceRangeChange(METER_100));
+        mBtn200meter.setOnClickListener(v->onFenceRangeChange(METER_200));
+        mBtn500meter.setOnClickListener(v->onFenceRangeChange(METER_500));
+        mBtn1000meter.setOnClickListener(v->onFenceRangeChange(METER_1000));
     }
 
     private void updateSelectedRange(int meter) {
@@ -177,10 +182,18 @@ public class EditFenceActivity extends AppCompatActivity {
         FenceRangeItem item = new FenceRangeItem();
         item.setMeter(mCurrentFenceRange);
         item.setTitle(mFenceName.getText().toString());
-        item.setStudenId(mStudents.get(mCurrnetStudentIdx).getStudent_id());
+        item.setUuid(mStudents.get(mCurrnetStudentIdx).getUuid());
         item.setLatitude(mLatlng.latitude);
         item.setLongtitude(mLatlng.longitude);
-        mDbHelper.insertFenceItem(mDbHelper.getWritableDatabase(), item);
+        //mDbHelper.insertFenceItem(mDbHelper.getWritableDatabase(), item);
+        Intent intent = new Intent();
+        intent.setClass(this, DataSyncService.class);
+        intent.setAction(Def.ACTION_CREATE_FENCE);
+        intent.putExtra(Def.KEY_UUID, mStudents.get(mCurrnetStudentIdx).getUuid());
+        intent.putExtra(Def.KEY_ZONE_NAME, mFenceName.getText().toString());
+        intent.putExtra(Def.KEY_ZONE_RADIUS, ((float)mCurrentFenceRange / 1000.f));
+        intent.putExtra(Def.KEY_ZONE_DETAIL, mLatlng.latitude +","+mLatlng.longitude);
+        startService(intent);
         onBackPressed();
     }
 
@@ -206,6 +219,7 @@ public class EditFenceActivity extends AppCompatActivity {
         if (mMapView != null) {
             mMapView.onResume();
         }
+        mCurrnetStudentIdx = mSharePreference.getInt(Def.SP_CURRENT_STUDENT, 0);
     }
 
     @Override

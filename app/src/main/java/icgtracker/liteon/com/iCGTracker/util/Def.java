@@ -73,6 +73,27 @@ public class Def {
 	//API 19 get device event report
 	public static final String REQUEST_GET_DEVICE_EVENT_REPORT = "DeviceEventReport";
 	public static final String KEY_EMAIL = "email";
+	//API 27 list fence
+    public static final String REQUEST_LIST_FENCE = "GeozoneList";
+    
+	//API 28 create/update fence
+	public static final String REQUEST_CREATE_FENCE = "GeozoneCreate";
+    public static final String KEY_ZONE_DETAIL = "zone_details";
+    public static final String KEY_ZONE_RADIUS = "zone_radius";
+    public static final String KEY_ZONE_NAME = "zone_name";
+    public static final String KEY_ZONE_ENTRY_ALERT = "zone_entry_alert";
+    public static final String KEY_ZONE_EXIT_ALERT = "zone_exit_alert";
+    public static final String KEY_ZONE_DESC = "zone_description";
+    public static final String KEY_VALID_TILL = "valid_till";
+    public static final String KEY_FREQ_MIN = "frequency_minutes";
+
+    //API 29 delete fence
+    public static final String REQUEST_DELETE_FENCE = "GeozoneDelete";
+
+
+
+
+
 	//API 32 update child info
 	public static final String REQUEST_UPDATE_CHILD_INFO = "StudentUpdate";
 	public static final String KEY_STUDENT_ID = "student_id";
@@ -148,6 +169,10 @@ public class Def {
 	public static final String ACTION_UPDATE_STUDENT_DETAIL = "com.liteon.icampusguardian.ACTION_UPDATE_STUDENT_DETAIL";
 	public static final String ACTION_UPDATE_PARENT_DETAIL = "com.liteon.icampusguardian.ACTION_UPDATE_PARENT_DETAIL";
 	public static final String ACTION_RESET_PASSWORD = "com.liteon.icampusguardian.ACTION_RESET_PASSWORD";
+    public static final String ACTION_CREATE_FENCE = "com.liteon.icampusguardian.ACTION_CREATE_FENCE";
+    public static final String ACTION_UPDATE_FENCE = "com.liteon.icampusguardian.ACTION_UPDATE_FENCE";
+    public static final String ACTION_LIST_FENCE = "com.liteon.icampusguardian.ACTION_LIST_FENCE";
+    public static final String ACTION_DELETE_FENCE = "com.liteon.icampusguardian.ACTION_DELETE_FENCE";
 
 	//Action fro reponse of DataSync Service
 	public static final String ACTION_ERROR_NOTIFY = "com.liteon.icampusguardian.ACTION_ERROR_NOTIFY";

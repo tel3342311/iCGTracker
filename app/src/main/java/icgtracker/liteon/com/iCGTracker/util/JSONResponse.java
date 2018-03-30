@@ -235,7 +235,21 @@ public class JSONResponse {
             this.uuid = uuid;
         }
 
-        /**
+		/**
+		 * API 27
+		 */
+		 @SerializedName("GeozoneList")
+		 private Geozone geozones[];
+
+		public Geozone[] getGeozones() {
+			return geozones;
+		}
+
+		public void setGeozones(Geozone[] geozones) {
+			this.geozones = geozones;
+		}
+
+		/**
 		 * API 36
 		 */
 		@SerializedName("name")
@@ -810,6 +824,120 @@ public class JSONResponse {
 
 		public void setDuration(int duration) {
 			this.duration = duration;
+		}
+	}
+
+	public static class Geozone {
+
+		@SerializedName("geozone_id")
+		private int geozone_id;
+		@SerializedName("user_id")
+		private int user_id;
+		@SerializedName("uuid")
+		private String uuid;
+		@SerializedName("zone_details")
+		private String zone_details;
+		@SerializedName("zone_name")
+		private String zone_name;
+		@SerializedName("zone_entry_alert")
+		private String zone_entry_alert;
+		@SerializedName("zone_exit_alert")
+		private String zone_exit_alert;
+		@SerializedName("zone_description")
+		private String zone_description;
+		@SerializedName("zone_radius")
+		private float zone_radius;
+		@SerializedName("frequency_minutes")
+		private int frequency_minutes;
+		@SerializedName("valid_till")
+		private String valid_till;
+
+		public int getGeozone_id() {
+			return geozone_id;
+		}
+
+		public void setGeozone_id(int geozone_id) {
+			this.geozone_id = geozone_id;
+		}
+
+		public int getUser_id() {
+			return user_id;
+		}
+
+		public void setUser_id(int user_id) {
+			this.user_id = user_id;
+		}
+
+		public String getUuid() {
+			return uuid;
+		}
+
+		public void setUuid(String uuid) {
+			this.uuid = uuid;
+		}
+
+		public String getZone_details() {
+			return zone_details;
+		}
+
+		public void setZone_details(String zone_details) {
+			this.zone_details = zone_details;
+		}
+
+		public String getZone_name() {
+			return zone_name;
+		}
+
+		public void setZone_name(String zone_name) {
+			this.zone_name = zone_name;
+		}
+
+		public String getZone_entry_alert() {
+			return zone_entry_alert;
+		}
+
+		public void setZone_entry_alert(String zone_entry_alert) {
+			this.zone_entry_alert = zone_entry_alert;
+		}
+
+		public String getZone_exit_alert() {
+			return zone_exit_alert;
+		}
+
+		public void setZone_exit_alert(String zone_exit_alert) {
+			this.zone_exit_alert = zone_exit_alert;
+		}
+
+		public String getZone_description() {
+			return zone_description;
+		}
+
+		public void setZone_description(String zone_description) {
+			this.zone_description = zone_description;
+		}
+
+		public float getZone_radius() {
+			return zone_radius;
+		}
+
+		public void setZone_radius(float zone_radius) {
+			this.zone_radius = zone_radius;
+		}
+
+		public int getFrequency_minutes() {
+			return frequency_minutes;
+		}
+
+		public void setFrequency_minutes(int frequency_minutes) {
+			this.frequency_minutes = frequency_minutes;
+		}
+
+		public String getValid_till() {
+			return valid_till;
+		}
+
+		public void setValid_till(String valid_till) {
+			this.valid_till = valid_till;
 		}
 	}
 }

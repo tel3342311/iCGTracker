@@ -6,29 +6,47 @@ package icgtracker.liteon.com.iCGTracker.util;
 
 public class FenceRangeItem {
 
-    String studenId;
+    int fence_id;
+    String Uuid;
     double latitude;
     double longtitude;
     String title;
+    int report_freq;
     boolean isDelete;
-    int meter;
+    float meter;
 
-    public int getMeter() {
+    public int getFence_id() {
+        return fence_id;
+    }
+
+    public void setFence_id(int fence_id) {
+        this.fence_id = fence_id;
+    }
+
+    public int getReport_freq() {
+        return report_freq;
+    }
+
+    public void setReport_freq(int report_freq) {
+        this.report_freq = report_freq;
+    }
+
+    public float getMeter() {
         return meter;
     }
 
-    public void setMeter(int meter) {
+    public void setMeter(float meter) {
         this.meter = meter;
     }
 
     int _id;
 
-    public String getStudenId() {
-        return studenId;
+    public String getUuid() {
+        return Uuid;
     }
 
-    public void setStudenId(String studenId) {
-        this.studenId = studenId;
+    public void setUuid(String uuid) {
+        this.Uuid = uuid;
     }
 
     public double getLatitude() {
