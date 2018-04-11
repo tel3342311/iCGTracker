@@ -111,4 +111,5 @@
     <string name="bt_search">藍牙尋物</string>
     <string name="bt_close">關閉</string>
     <string name="bt_keep">藍芽防丟</string>
+    <string name="pairing_device_select_device">選擇欲配對藍牙裝置</string>
 </resources>

@@ -1,5 +1,6 @@
 package icgtracker.liteon.com.iCGTracker;
 
+import android.content.Intent;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -54,7 +55,11 @@ public class DeviceInfoActivity extends AppCompatActivity {
 
     private void setListener() {
 
-        mDeviceBound.setOnClickListener(v -> {});
+        mDeviceBound.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setClass(this, BLEPairingListActivity.class);
+            startActivity(intent);
+        });
         mFirmwareUpdate.setOnClickListener(v -> {});
         mReport30m.setOnClickListener(v -> {});
         mReport60m.setOnClickListener(v -> {});

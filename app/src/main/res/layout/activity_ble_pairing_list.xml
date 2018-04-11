@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_ble_pairing_bg"
+        android:minHeight="?attr/actionBarSize" >
+
+        <TextView
+            android:id="@+id/login_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/activity_vertical_margin"
+            android:layout_toEndOf="@id/cancel"
+            android:layout_gravity="center"
+            android:text="@string/pairing_device_select_device"
+            android:textColor="@color/md_black_1000"
+            android:textSize="@dimen/page_title_text_size" />
+	</android.support.v7.widget.Toolbar>
+        
+    <RelativeLayout 
+        android:id="@+id/watch_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
+        android:background="@color/color_ble_pairing_bg">
+        <ImageView 
+            android:layout_width="@dimen/ble_pairing_watch_img_width"
+            android:layout_height="@dimen/ble_pairing_watch_img_height"
+            android:background="@color/md_grey_700"
+            android:layout_margin="@dimen/ble_pairing_watch_img_margin"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>	
+    
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/profile_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/watch_bg"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:scrollbars="vertical" />
+
+</RelativeLayout>
