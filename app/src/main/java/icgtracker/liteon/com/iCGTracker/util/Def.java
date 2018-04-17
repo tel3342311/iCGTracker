@@ -1,5 +1,7 @@
 package icgtracker.liteon.com.iCGTracker.util;
 
+import java.util.UUID;
+
 public class Def {
 	//URL
 	public final static String URL_3rd_party = "icg.aricentcoe.com:8080";
@@ -89,10 +91,6 @@ public class Def {
 
     //API 29 delete fence
     public static final String REQUEST_DELETE_FENCE = "GeozoneDelete";
-
-
-
-
 
 	//API 32 update child info
 	public static final String REQUEST_UPDATE_CHILD_INFO = "StudentUpdate";
@@ -194,4 +192,35 @@ public class Def {
     public static final String DEFAULT_NOTIFICATION_CHANNEL_ID = "channle_01";
 	public static final String DEFAULT_NOTIFICATION_CHANNEL_NAME = "channl_sos";
 
+	//BLE Service UUID
+	public static final UUID BATTERY_SERVICE_UUID = UUID.fromString("0000180f-0000-1000-8000-00805f9b34fb");
+	public static final UUID BATTERY_LEVEL_CHARACTER_UUID = UUID.fromString("00002a19-0000-1000-8000-00805f9b34fb");
+	public static final UUID DEVICE_INFORMATION_UUID = UUID.fromString("0000180a-0000-1000-8000-00805f9b34fb");
+	public static final UUID SOFTWARE_REVISION_STRING_UUID = UUID.fromString("00002a28-0000-1000-8000-00805f9b34fb");
+	public static final UUID TRACKER_UUID = UUID.fromString("0e9bdeb8-6bba-4947-9a2a-88e2a1befbd3");
+
+	/**
+     * =================================================================
+     *
+     * Action for Ble Service
+     *
+     * =================================================================
+     **/
+    public final static String ACTION_GATT_CONNECTED = "icgtracker.liteon.com.iCGTracker.ACTION_GATT_CONNECTED";
+    public final static String ACTION_GATT_DISCONNECTED = "icgtracker.liteon.com.iCGTracker.ACTION_GATT_DISCONNECTED";
+    public final static String ACTION_GATT_SERVICES_DISCOVERED = "icgtracker.liteon.com.iCGTracker.ACTION_GATT_SERVICES_DISCOVERED";
+    public final static String ACTION_DATA_AVAILABLE = "icgtracker.liteon.com.iCGTracker.ACTION_DATA_AVAILABLE";
+    public final static String ACTION_CHAR_READED = "icgtracker.liteon.com.iCGTracker.ACTION_CHAR_READED";
+    public final static String BATTERY_LEVEL_AVAILABLE = "icgtracker.liteon.com.iCGTracker.BATTERY_LEVEL_AVAILABLE";
+    public final static String EXTRA_DATA = "icgtracker.liteon.com.iCGTracker.EXTRA_DATA";
+    public final static String EXTRA_STRING_DATA = "icgtracker.liteon.com.iCGTracker.EXTRA_STRING_DATA";
+    public final static String EXTRA_DATA_LENGTH = "icgtracker.liteon.com.iCGTracker.EXTRA_DATA_LENGTH";
+    public final static String ACTION_GATT_RSSI = "icgtracker.liteon.com.iCGTracker.ACTION_GATT_RSSI";
+    public final static String EXTRA_DATA_RSSI = "icgtracker.liteon.com.iCGTracker.ACTION_GATT_RSSI";
+	public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
+	public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
+	public static final String FIND_DEVICE_ALARM_ON = "find.device.alarm.on";
+	public static final String DISCONNECT_DEVICE = "find.device.disconnect";
+	public static final String CANCEL_DEVICE_ALARM = "find.device.cancel.alarm";
+	public static final String DEVICE_BATTERY = "device.battery.level";
 }

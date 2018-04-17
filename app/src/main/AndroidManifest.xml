@@ -112,7 +112,12 @@
             android:exported="false" />
 
         <activity android:name=".DeviceInfoActivity" />
-        <activity android:name=".BLEPairingListActivity"></activity>
+        <activity android:name=".BLEPairingListActivity" />
+
+        <service
+            android:name=".service.BleService"
+            android:enabled="false"
+            android:exported="false"/>
     </application>
 
 </manifest>

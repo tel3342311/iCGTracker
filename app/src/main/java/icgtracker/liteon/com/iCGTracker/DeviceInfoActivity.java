@@ -1,13 +1,18 @@
 package icgtracker.liteon.com.iCGTracker;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.media.Image;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import icgtracker.liteon.com.iCGTracker.service.BleService;
 
 public class DeviceInfoActivity extends AppCompatActivity {
 
@@ -26,6 +31,20 @@ public class DeviceInfoActivity extends AppCompatActivity {
     private View mBTKeepInRange;
     private TextView mTitle;
     private ImageView mCancel;
+    private BleService mBleService;
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+
+            mBleService = null;
+        }
+    };
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +52,7 @@ public class DeviceInfoActivity extends AppCompatActivity {
         findViews();
         setListener();
         setOptionText();
+        bindBleSevice();
     }
 
     private void findViews() {
@@ -68,7 +88,7 @@ public class DeviceInfoActivity extends AppCompatActivity {
         mBTSearch.setOnClickListener(v -> {});
         mBTClose.setOnClickListener(v -> {});
         mBTKeepInRange.setOnClickListener(v -> {});
-        mCancel.setOnClickListener( v-> onBackPressed());
+        mCancel.setOnClickListener( v -> onBackPressed());
     }
 
     private void setOptionText() {
@@ -82,4 +102,11 @@ public class DeviceInfoActivity extends AppCompatActivity {
         ((TextView)mBTKeepInRange.findViewById(R.id.record_item_time)).setText(getString(R.string.bt_keep));
         mBTKeepInRange.findViewById(R.id.connect_line).setVisibility(View.GONE);
     }
+
+    private void bindBleSevice() {
+        Intent serviceIntent = new Intent(this, BleService.class);
+        bindService(serviceIntent, conn, BIND_AUTO_CREATE);
+    }
+
+
 }
