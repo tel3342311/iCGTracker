@@ -5,29 +5,29 @@
         <item
             android:id="@+id/action_person1"
             android:enabled="true"
-            android:icon="@drawable/menu_img_smail"
+            android:icon="@drawable/setup_img_picture"
             android:title="@string/add_tracker"
             app:showAsAction="withText"
             app:actionLayout="@layout/component_menu_item"/>
         <item
             android:id="@+id/action_person2"
             android:enabled="true"
-            android:icon="@drawable/menu_img_smail"
+            android:icon="@drawable/setup_img_picture"
             android:title="@string/add_tracker"/>
         <item
             android:id="@+id/action_person3"
             android:enabled="true"
-            android:icon="@drawable/menu_img_smail"
+            android:icon="@drawable/setup_img_picture"
             android:title="@string/add_tracker"/>
         <item
             android:id="@+id/action_person4"
             android:enabled="true"
-            android:icon="@drawable/menu_img_smail"
+            android:icon="@drawable/setup_img_picture"
             android:title="@string/add_tracker"/>
         <item
             android:id="@+id/action_person5"
             android:enabled="true"
-            android:icon="@drawable/menu_img_smail"
+            android:icon="@drawable/setup_img_picture"
             android:title="@string/add_tracker"/>
     </group>
 

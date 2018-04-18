@@ -11,7 +11,7 @@
         android:id="@+id/fence_entry_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginVertical="@dimen/activity_vertical_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:background="@drawable/round_bg"/>
@@ -21,7 +21,7 @@
         android:layout_width="@dimen/fence_list_btn_size"
         android:layout_height="@dimen/fence_list_btn_size"
         android:background="@drawable/btn_fence_btn_right"
-        android:layout_alignParentEnd="true"
+        android:layout_alignEnd="@id/fence_entry_list"
         android:layout_marginTop="@dimen/activity_horizontal_margin"/>
 
     <ImageView
@@ -29,7 +29,7 @@
         android:layout_width="@dimen/fence_list_btn_size"
         android:layout_height="@dimen/fence_list_btn_size"
         android:background="@drawable/btn_fence_btn_left"
-        android:layout_alignParentStart="true"
+        android:layout_alignStart="@id/fence_entry_list"
         android:layout_marginTop="@dimen/activity_horizontal_margin"/>
 
 </RelativeLayout>

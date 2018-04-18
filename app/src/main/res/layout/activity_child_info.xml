@@ -43,7 +43,7 @@
 			android:id="@+id/child_icon"
 			android:layout_width="@dimen/child_photo_size"
 			android:layout_height="@dimen/child_photo_size"
-			android:background="@drawable/menu_img_smail"
+			android:background="@drawable/setup_img_picture"
 			android:layout_centerHorizontal="true"/>
         <EditText
             android:id="@+id/login_name"

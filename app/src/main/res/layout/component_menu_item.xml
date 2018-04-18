@@ -11,7 +11,7 @@
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
         android:layout_marginStart="@dimen/activity_vertical_margin"
-        android:background="@drawable/menu_img_smail"/>
+        android:background="@drawable/setup_img_picture"/>
 
      <TextView
          android:id="@+id/title_text"
@@ -29,7 +29,7 @@
          android:layout_centerVertical="true"
          android:layout_alignParentEnd="true"
          android:layout_marginEnd="@dimen/activity_vertical_margin"
-         android:background="@drawable/ic_link_black_24dp"
+         android:background="@drawable/menu_img_link"
          android:visibility="invisible"/>
 
      <View

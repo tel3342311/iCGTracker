@@ -26,6 +26,8 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -225,7 +227,9 @@ public class FenceFragment extends Fragment {
                 FenceRangeItem fenceItem = mFenceRangeList.get(mCurrentFenceIdx);
                 mLatlng = new LatLng(fenceItem.getLatitude(), fenceItem.getLongtitude());
                 mMeter = fenceItem.getMeter();
-                MarkerOptions markerOptions = new MarkerOptions().position(mLatlng);
+                BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.fence_img_location);
+                MarkerOptions markerOptions = new MarkerOptions().position(mLatlng).icon(icon);
+
                 if (mMarker != null) {
                     mGoogleMap.clear();
                 }
@@ -240,7 +244,7 @@ public class FenceFragment extends Fragment {
                         .radius(mMeter)
                         .strokeColor(ContextCompat.getColor(App.getContext(), R.color.md_grey_700))
                         .strokeWidth(1.f)
-                        .fillColor(ContextCompat.getColor(App.getContext(), R.color.color_fence_circle_bg)));
+                        .fillColor(ContextCompat.getColor(App.getContext(), R.color.color_fence_normal_circle_bg)));
 
 
                 mGoogleMap.animateCamera(_cameraUpdate);

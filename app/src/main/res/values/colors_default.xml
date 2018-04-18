@@ -22,8 +22,9 @@
     <color name="color_bottom_bar_normal">#22ac8c</color>
     <color name="color_bottom_bar_icon_pressed">#65fdcc</color>
     <color name="color_safty_update_bar">#cce9e4</color>
-    <color name="color_fence_list_bg">#a4cccb</color>
+    <color name="color_fence_list_bg">#b2dfd4</color>
     <color name="color_fence_enter_bg">#32bf00</color>
     <color name="color_fence_leave_bg">#e8ac00</color>
-    <color name="color_fence_circle_bg">#80a0ff7f</color>
+    <color name="color_fence_circle_bg">#6636B8AC</color>
+    <color name="color_fence_normal_circle_bg">#6600EE67</color>
 </resources>

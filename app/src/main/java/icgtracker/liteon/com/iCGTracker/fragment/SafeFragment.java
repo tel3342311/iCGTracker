@@ -24,6 +24,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -231,7 +233,8 @@ public class SafeFragment extends Fragment {
             mGoogleMap.clear();
             CameraUpdate cameraUpdate;
             if (mLatlng != null) {
-                mMarker = mGoogleMap.addMarker(new MarkerOptions().position(mLatlng).title("最後位置"));
+                BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.fence_img_location);
+                mMarker = mGoogleMap.addMarker(new MarkerOptions().position(mLatlng).title("最後位置").icon(icon));
                 cameraUpdate = CameraUpdateFactory.newLatLngZoom(mLatlng, 16);
             } else {
                 cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(25.077877, 121.571141), 16);

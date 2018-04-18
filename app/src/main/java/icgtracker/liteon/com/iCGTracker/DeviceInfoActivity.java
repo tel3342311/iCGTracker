@@ -105,7 +105,7 @@ public class DeviceInfoActivity extends AppCompatActivity {
 
     private void bindBleSevice() {
         Intent serviceIntent = new Intent(this, BleService.class);
-        bindService(serviceIntent, conn, BIND_AUTO_CREATE);
+        bindService(serviceIntent, mConnection, BIND_AUTO_CREATE);
     }
 
 
