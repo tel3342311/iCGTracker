@@ -3,8 +3,13 @@ package icgtracker.liteon.com.iCGTracker;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +28,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aigestudio.wheelpicker.WheelPicker;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.Key;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
+
 import icgtracker.liteon.com.iCGTracker.db.DBHelper;
 import icgtracker.liteon.com.iCGTracker.util.Def;
 import icgtracker.liteon.com.iCGTracker.util.JSONResponse.Student;
@@ -31,6 +43,8 @@ import icgtracker.liteon.com.iCGTracker.util.ProfileItem.TYPE;
 import icgtracker.liteon.com.iCGTracker.util.ProfileItemAdapter;
 import icgtracker.liteon.com.iCGTracker.util.ProfileItemAdapter.ViewHolder.IProfileItemClickListener;
 
+import java.nio.ByteBuffer;
+import java.security.MessageDigest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -61,6 +75,8 @@ public class ChildInfoUpdateActivity extends AppCompatActivity implements IProfi
 	private ImageView mBackBtn;
 	private String mStudentName;
 	private TextView mTitleView;
+	private ImageView mChildIcon;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -73,6 +89,7 @@ public class ChildInfoUpdateActivity extends AppCompatActivity implements IProfi
         mStudentName = getIntent().getStringExtra(Def.EXTRA_STUDENT_NAME);
 		mName.setText(mStudentName);
         initRecycleView();
+
     }
 	
 	private Student createChild() {
@@ -117,6 +134,30 @@ public class ChildInfoUpdateActivity extends AppCompatActivity implements IProfi
     		}
         	mDataSet.add(item);
         }
+
+		//get current bt address
+		String studentID = mStudent.getStudent_id();
+		// read child image file
+		RequestOptions options = new RequestOptions().centerCrop()
+		.placeholder(R.drawable.setup_img_picture)
+		.error(R.drawable.setup_img_picture)
+		.diskCacheStrategy(DiskCacheStrategy.NONE)
+		.signature(messageDigest -> messageDigest.update(ByteBuffer.allocate(Integer.SIZE).putInt((int) System.currentTimeMillis()).array()));
+
+		Glide.with(App.getContext()).asBitmap().load(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+				.getAbsolutePath() + "/" + studentID + ".jpg").apply(options).into(new SimpleTarget<Bitmap>() {
+
+			@Override
+			public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+				mChildIcon.setImageBitmap(resource);
+			}
+
+			@Override
+			public void onLoadFailed(@Nullable Drawable errorDrawable) {
+				super.onLoadFailed(errorDrawable);
+				mChildIcon.setImageDrawable(errorDrawable);
+			}
+		});
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -170,6 +211,7 @@ public class ChildInfoUpdateActivity extends AppCompatActivity implements IProfi
 		one_wheel = findViewById(R.id.one_wheel);
 		mWheel_single = one_wheel.findViewById(R.id.main_wheel_left);
 		mWheelTitle = one_wheel.findViewById(R.id.year_title);
+		mChildIcon = findViewById(R.id.child_icon);
 	}
 	
 	private void setListener() {
@@ -181,6 +223,12 @@ public class ChildInfoUpdateActivity extends AppCompatActivity implements IProfi
 		mWheel_right.setOnItemSelectedListener(mWheelClickListener);
 		mWheel_single.setOnItemSelectedListener(mWheelClickListener);
 		mBackBtn.setOnClickListener(v -> onBackPressed());
+		mChildIcon.setOnClickListener( v -> {
+			Intent intent = new Intent();
+            intent.putExtra(Def.EXTRA_STUDENT_NAME, mStudentName);
+            intent.setClass(this, ChoosePhotoActivity.class);
+			startActivity(intent);
+		});
 	}
 
     public void UpdateWheelForDate(Calendar date) {

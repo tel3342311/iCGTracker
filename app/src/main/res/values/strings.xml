@@ -12,6 +12,7 @@
     <string name="logout">登出</string>
     <string name="add_tracker">新增珍愛者</string>
     <string name="delete_tracker">刪除%s</string>
+    <string name="delete">刪除</string>
     <string name="login_ok">好</string>
     <!--  login Page -->
     <string name="login_parent_account">登入帳號</string>
@@ -112,4 +113,33 @@
     <string name="bt_close">關閉</string>
     <string name="bt_keep">藍芽防丟</string>
     <string name="pairing_device_select_device">選擇欲配對藍牙裝置</string>
+    <!-- child photo setting -->
+    <string name="child_photo_photo_permission">iCampus Guardian想取用您的照片</string>
+    <string name="child_photo_photo_hint">這樣可以讓你從圖庫中選擇你喜歡的照片當此大頭貼</string>
+    <string name="child_photo_photo_deny">不允許</string>
+    <string name="child_photo_photo_ok">好</string>
+    <string name="child_photo_photo_select_pic">選擇圖片</string>
+    <string name="child_photo_photo_used_photo">已使用過圖片</string>
+    <string name="child_photo_photo_all_photo">所有照片</string>
+    <string name="child_photo_photo">寶貝照片</string>
+    <string name="child_photo_photo_crop">裁切照片，請移動、縮放照片至您要的畫面</string>
+    <!-- pairing watch page -->
+    <string name="pairing_watch_steps">請遵照圖示將手錶切換到配對頁面, 手錶切到配對畫面後, 請點選配對智慧手錶進行下一步</string>
+    <string name="pairing_watch_pair">配對智慧手錶</string>
+    <string name="pairing_watch_later">之後再配對</string>
+    <string name="pairing_watch_later_in_setting">之後可再至"設定"中配對手環</string>
+    <string name="pairing_watch_select_watch">請選擇要進行配對的iCG智慧手錶</string>
+    <string name="pairing_watch_input_pin">請輸入手錶上顯示PIN碼</string>
+    <string name="pairing_watch_pin_error">PIN碼輸入錯誤或連接失敗,請重新輸入PIN碼並且將手錶靠近裝置</string>
+    <string name="pairing_watch_success">iCG智慧手錶配對成功, 已綁定為%s智慧手錶</string>
+    <string name="pairing_watch_quit">退出</string>
+    <string name="pairing_watch_ask_permission">應用程式要求以繼續</string>
+    <string name="pairing_watch_deny">拒絕</string>
+    <string name="pairing_watch_accept">允許</string>
+    <!-- device pairing -->
+    <string name="unbind_watch">解除綁定</string>
+    <string name="bind_watch">新增綁定</string>
+    <string name="will_unbind_watch">將解除已綁定的智慧手錶</string>
+    <string name="bind_cancel">取消</string>
+    <string name="bind_confirm">確定</string>
 </resources>

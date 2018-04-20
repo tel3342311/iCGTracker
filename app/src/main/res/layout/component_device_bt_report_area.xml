@@ -44,9 +44,6 @@
 
     <include
         android:id="@+id/report_60_min"
-
-
-
         layout="@layout/component_fence_size_item"
         android:layout_width="@dimen/fence_size_icon_width"
         android:layout_height="0dp"
