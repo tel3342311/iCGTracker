@@ -198,7 +198,10 @@ public class Def {
 	public static final UUID DEVICE_INFORMATION_UUID = UUID.fromString("0000180a-0000-1000-8000-00805f9b34fb");
 	public static final UUID SOFTWARE_REVISION_STRING_UUID = UUID.fromString("00002a28-0000-1000-8000-00805f9b34fb");
 	public static final UUID TRACKER_UUID = UUID.fromString("0e9bdeb8-6bba-4947-9a2a-88e2a1befbd3");
-
+	public static final UUID NORDIC_UART_SERVICE_UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
+	public static final UUID NORDIC_UART_SERVICE_RX_UUID = UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
+	public static final UUID NORDIC_UART_SERVICE_TX_UUID = UUID.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
+	public static final byte[] CMD_GET_UUID = "uuid_read".getBytes();
 	/**
      * =================================================================
      *

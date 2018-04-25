@@ -108,15 +108,12 @@ public class BleService extends Service {
             rssiIntent.setAction(ACTION_GATT_RSSI);
             sendBroadcast(rssiIntent);
             if (mBluetoothGatt != null) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            Thread.sleep(1500);
-                            mBluetoothGatt.readRemoteRssi();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(1500);
+                        mBluetoothGatt.readRemoteRssi();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }).start();
             }

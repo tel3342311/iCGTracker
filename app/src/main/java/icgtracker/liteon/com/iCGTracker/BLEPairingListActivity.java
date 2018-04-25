@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
@@ -28,6 +29,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -38,6 +40,7 @@ import icgtracker.liteon.com.iCGTracker.util.BLEItem;
 import icgtracker.liteon.com.iCGTracker.util.BLEItemAdapter;
 import icgtracker.liteon.com.iCGTracker.util.CustomDialog;
 import icgtracker.liteon.com.iCGTracker.util.Def;
+import icgtracker.liteon.com.iCGTracker.util.GuardianApiClient;
 import icgtracker.liteon.com.iCGTracker.util.JSONResponse;
 
 public class BLEPairingListActivity extends AppCompatActivity implements BLEItemAdapter.ViewHolder.IBLEItemClickListener {
@@ -62,7 +65,7 @@ public class BLEPairingListActivity extends AppCompatActivity implements BLEItem
     private DBHelper mDbHelper;
     private List<JSONResponse.Student> mStudents;
     private int mCurrnetStudentIdx;
-
+    private BluetoothGattCharacteristic mRxCharacteristic;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -244,6 +247,25 @@ public class BLEPairingListActivity extends AppCompatActivity implements BLEItem
         mAdapter.notifyDataSetChanged();
     }
 
+    private void UpdateList(BluetoothDevice device, int profile) {
+        BluetoothDevice btDevice = device;
+        for (BLEItem item : mDataSet) {
+            BluetoothDevice bluetoothDevice = item.getmBluetoothDevice();
+            if (bluetoothDevice == null) {
+                continue;
+            } else if (TextUtils.equals(btDevice.getAddress(), bluetoothDevice.getAddress()) ) {
+                if (profile == BluetoothProfile.STATE_CONNECTED) {
+                    item.setValue("Connected");
+                } else if (profile == BluetoothProfile.STATE_DISCONNECTED) {
+                    item.setValue("Not Connected");
+                }
+                item.setmBluetoothDevice(btDevice);
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+
+    }
+
     private ScanCallback mScanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
@@ -294,6 +316,9 @@ public class BLEPairingListActivity extends AppCompatActivity implements BLEItem
                     break;
                 case BluetoothProfile.STATE_DISCONNECTED:
                     Log.e(TAG,"gattCallback "+ "STATE_DISCONNECTED");
+                    runOnUiThread( () -> {
+                        UpdateList(gatt.getDevice(), newState);
+                    });
                     break;
                 default:
                     Log.e(TAG,"gattCallback "+ "STATE_OTHER :" + newState);
@@ -320,16 +345,49 @@ public class BLEPairingListActivity extends AppCompatActivity implements BLEItem
                 } else if (Def.DEVICE_INFORMATION_UUID.compareTo(service.getUuid()) == 0) {
                     List<BluetoothGattCharacteristic> characterList = service.getCharacteristics();
                     for (BluetoothGattCharacteristic ch : characterList) {
-                        if (ch.getUuid().compareTo(Def.SOFTWARE_REVISION_STRING_UUID) == 0) {
-                            gatt.readCharacteristic(ch);
+                        //if (ch.getUuid().compareTo(Def.SOFTWARE_REVISION_STRING_UUID) == 0) {
+                        //    gatt.readCharacteristic(ch);
+                        //}
+                        Log.i(TAG, "BluetoothGattCharacteristic UUID " + ch.getUuid());
+                        Log.i(TAG, "BluetoothGattCharacteristic Value " + Arrays.toString(ch.getValue()));
+                        Log.i(TAG, "BluetoothGattCharacteristic Value " + ch.getStringValue(0));
+                    }
+                } else if (Def.NORDIC_UART_SERVICE_UUID.compareTo(service.getUuid()) == 0) {
+                    runOnUiThread( () -> {
+                        UpdateList(gatt.getDevice(), BluetoothProfile.STATE_CONNECTED);
+                    });
+                    List<BluetoothGattCharacteristic> characterList = service.getCharacteristics();
+                    for (BluetoothGattCharacteristic ch : characterList) {
+                        if (ch.getUuid().compareTo(Def.NORDIC_UART_SERVICE_RX_UUID) == 0) {
+                            //write cmd to get UUID
+                            ch.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
+                            ch.setValue("uuid_read");
+                            mRxCharacteristic = ch;
+                        } else if (ch.getUuid().compareTo(Def.NORDIC_UART_SERVICE_TX_UUID) == 0) {
+                            UUID uuid = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
+                            BluetoothGattDescriptor descriptor = ch.getDescriptor(uuid);
+                            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                            gatt.writeDescriptor(descriptor);
+                            try {
+                                Thread.sleep(1000);
+                            }catch(InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            gatt.setCharacteristicNotification(ch, true);
+                            if (mRxCharacteristic != null) {
+
+                                try {
+                                    Thread.sleep(8000);
+                                }catch(InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                gatt.writeCharacteristic(mRxCharacteristic);
+                            }
                         }
                         Log.i(TAG, "BluetoothGattCharacteristic UUID " + ch.getUuid());
                         Log.i(TAG, "BluetoothGattCharacteristic Value " + Arrays.toString(ch.getValue()));
                         Log.i(TAG, "BluetoothGattCharacteristic Value " + ch.getStringValue(0));
                     }
-                }
-                for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
-                    //gatt.readCharacteristic(characteristic);
                 }
             }
         }
@@ -344,9 +402,30 @@ public class BLEPairingListActivity extends AppCompatActivity implements BLEItem
                 Log.i(TAG,"onCharacteristicRead " + "getValue : " + Arrays.toString(characteristic.getValue()));
                 Log.i(TAG,"onCharacteristicRead " + "getStringValue : " + characteristic.getStringValue(0));
                 //gatt.disconnect();
+
             }
         }
 
+        @Override
+        public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+            Log.d(TAG,"onCharacteristicChanged " + characteristic.toString());
+            Log.d(TAG,"onCharacteristicChanged " + "getUUID : " + characteristic.getUuid());
+            Log.d(TAG,"onCharacteristicChanged " + "getDescriptor : " + characteristic.getDescriptor(characteristic.getUuid()));
+            Log.d(TAG,"onCharacteristicChanged " + "getInstanceId : " + characteristic.getInstanceId());
+            Log.d(TAG,"onCharacteristicChanged " + "getValue : " + Arrays.toString(characteristic.getValue()));
+            Log.d(TAG,"onCharacteristicChanged " + "getStringValue : " + characteristic.getStringValue(0));
+            if (characteristic.getUuid().compareTo(Def.NORDIC_UART_SERVICE_TX_UUID) == 0) {
+                String plain = characteristic.getStringValue(0);
+                final String uuid = String.format("%s-%s-%s-%s", plain.substring(0,7), plain.substring(7,11), plain.substring(11,15), plain.substring(15));
+                Log.d(TAG,"onCharacteristicChanged " + "get Tracker uuid : " + uuid);
+                mStudents.get(mCurrnetStudentIdx).setUuid(uuid);
+                mDbHelper.updateChildData(mDbHelper.getWritableDatabase(), mStudents.get(mCurrnetStudentIdx));
+                new Thread( () -> {
+                    GuardianApiClient apiClient = GuardianApiClient.getInstance(BLEPairingListActivity.this);
+                    apiClient.pairNewDevice(mStudents.get(mCurrnetStudentIdx));
+                });
+            }
+        }
     };
 
     private void findViews() {
@@ -361,15 +440,13 @@ public class BLEPairingListActivity extends AppCompatActivity implements BLEItem
     @Override
     public void onBleItemClick(BLEItem item) {
 
-        BluetoothDevice device = item.getmBluetoothDevice();
-        connectToDevice(device);
-        //if (TextUtils.isEmpty(mStudents.get(mCurrnetStudentIdx).getUuid())) {
-        mStudents.get(mCurrnetStudentIdx).setUuid(item.getId());
-        mDbHelper.updateChildData(mDbHelper.getWritableDatabase(), mStudents.get(mCurrnetStudentIdx));
-        //}
-
-//        Intent intent = new Intent();
-//        intent.setClass(this, BLEPinCodeInputActivity.class);
-//        startActivity(intent);
+        if (mRxCharacteristic == null) {
+            BluetoothDevice device = item.getmBluetoothDevice();
+            connectToDevice(device);
+            //mStudents.get(mCurrnetStudentIdx).setUuid(item.getId());
+            //mDbHelper.updateChildData(mDbHelper.getWritableDatabase(), mStudents.get(mCurrnetStudentIdx));
+        } else {
+            mGatt.writeCharacteristic(mRxCharacteristic);
+        }
     }
 }

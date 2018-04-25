@@ -36,7 +36,7 @@
         <ImageView 
             android:layout_width="@dimen/ble_pairing_watch_img_width"
             android:layout_height="@dimen/ble_pairing_watch_img_height"
-            android:background="@color/md_grey_700"
+            android:background="@drawable/deviceinfo_img_device"
             android:layout_margin="@dimen/ble_pairing_watch_img_margin"
             android:layout_centerInParent="true"/>
     </RelativeLayout>	
