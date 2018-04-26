@@ -132,7 +132,9 @@ public class DeviceInfoActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mBleService.close(mBleService.mBluetoothGatt);
+        if (mBleService.mBluetoothGatt != null) {
+            mBleService.close(mBleService.mBluetoothGatt);
+        }
         unbindService(mConnection);
         unregisterReceiver(mbtBroadcastReceiver);
     }

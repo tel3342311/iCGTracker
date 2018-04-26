@@ -214,8 +214,7 @@ public class BleService extends Service {
             }
 
         }
-        final BluetoothDevice device = mBluetoothAdapter
-                .getRemoteDevice(bleAddress);
+        final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(bleAddress);
 
         if (device == null) {
             Log.w(TAG, "Device not found.  Unable to connect.");

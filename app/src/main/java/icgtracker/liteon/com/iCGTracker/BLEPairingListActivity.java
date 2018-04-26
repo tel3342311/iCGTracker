@@ -1,5 +1,6 @@
 package icgtracker.liteon.com.iCGTracker;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -14,13 +15,18 @@ import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,16 +38,21 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 import icgtracker.liteon.com.iCGTracker.db.DBHelper;
+import icgtracker.liteon.com.iCGTracker.service.BleService;
 import icgtracker.liteon.com.iCGTracker.util.BLEItem;
 import icgtracker.liteon.com.iCGTracker.util.BLEItemAdapter;
 import icgtracker.liteon.com.iCGTracker.util.CustomDialog;
 import icgtracker.liteon.com.iCGTracker.util.Def;
 import icgtracker.liteon.com.iCGTracker.util.GuardianApiClient;
 import icgtracker.liteon.com.iCGTracker.util.JSONResponse;
+import icgtracker.liteon.com.iCGTracker.util.Utils;
+
+import static icgtracker.liteon.com.iCGTracker.util.Def.EXTRA_STRING_DATA;
 
 public class BLEPairingListActivity extends AppCompatActivity implements BLEItemAdapter.ViewHolder.IBLEItemClickListener {
 
@@ -66,11 +77,32 @@ public class BLEPairingListActivity extends AppCompatActivity implements BLEItem
     private List<JSONResponse.Student> mStudents;
     private int mCurrnetStudentIdx;
     private BluetoothGattCharacteristic mRxCharacteristic;
+    List<BluetoothGattService> mGattServices = new ArrayList<>();
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
+    private BleService mBleService;
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            mBleService = ((BleService.LocalBinder) iBinder).getService();
+            if (!mBleService.init()) {
+                finish();
+            }
+            //mBleService.connect(mBLEAddress);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+
+            mBleService = null;
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         askPermisson();
-
+        mSharedPreferences = getSharedPreferences(Def.SHARE_PREFERENCE, Context.MODE_PRIVATE);
+        mEditor = mSharedPreferences.edit();
         setContentView(R.layout.activity_ble_pairing_list);
         findViews();
         setListener();
@@ -79,7 +111,15 @@ public class BLEPairingListActivity extends AppCompatActivity implements BLEItem
         mDbHelper = DBHelper.getInstance(this);
         //get child list
         mStudents = mDbHelper.queryChildList(mDbHelper.getReadableDatabase());
+        bindBleSevice();
+        registerReceiver(mbtBroadcastReceiver, makeGattUpdateIntentFilter());
     }
+
+    private void bindBleSevice() {
+        Intent serviceIntent = new Intent(this, BleService.class);
+        bindService(serviceIntent, mConnection, BIND_AUTO_CREATE);
+    }
+
 
     public static boolean hasPermissions(Context context, String... permissions) {
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
@@ -121,8 +161,7 @@ public class BLEPairingListActivity extends AppCompatActivity implements BLEItem
     private void initBleComponent() {
         mHandler = new Handler();
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            Toast.makeText(this, "BLE Not Supported",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "BLE Not Supported", Toast.LENGTH_SHORT).show();
             finish();
         }
         final BluetoothManager bluetoothManager =
@@ -171,8 +210,7 @@ public class BLEPairingListActivity extends AppCompatActivity implements BLEItem
             }
 
         }
-        SharedPreferences sp = getSharedPreferences(Def.SHARE_PREFERENCE, Context.MODE_PRIVATE);
-        mCurrnetStudentIdx = sp.getInt(Def.SP_CURRENT_STUDENT, 0);
+        mCurrnetStudentIdx = mSharedPreferences.getInt(Def.SP_CURRENT_STUDENT, 0);
     }
 
     @Override
@@ -439,14 +477,94 @@ public class BLEPairingListActivity extends AppCompatActivity implements BLEItem
 
     @Override
     public void onBleItemClick(BLEItem item) {
+        BluetoothDevice device = item.getmBluetoothDevice();
+        if (mBleService != null && mBleService.init()) {
 
-        if (mRxCharacteristic == null) {
-            BluetoothDevice device = item.getmBluetoothDevice();
-            connectToDevice(device);
-            //mStudents.get(mCurrnetStudentIdx).setUuid(item.getId());
-            //mDbHelper.updateChildData(mDbHelper.getWritableDatabase(), mStudents.get(mCurrnetStudentIdx));
-        } else {
-            mGatt.writeCharacteristic(mRxCharacteristic);
+            mBleService.disconnect();
+            mBleService.connect(device.getAddress());
+        }
+        //connectToDevice(device);
+        //mStudents.get(mCurrnetStudentIdx).setUuid(item.getId());
+        //mDbHelper.updateChildData(mDbHelper.getWritableDatabase(), mStudents.get(mCurrnetStudentIdx));
+
+    }
+
+    private static IntentFilter makeGattUpdateIntentFilter() {
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Def.ACTION_GATT_CONNECTED);
+        intentFilter.addAction(Def.ACTION_GATT_DISCONNECTED);
+        intentFilter.addAction(Def.ACTION_GATT_SERVICES_DISCOVERED);
+        intentFilter.addAction(Def.ACTION_DATA_AVAILABLE);
+        return intentFilter;
+    }
+
+    BroadcastReceiver mbtBroadcastReceiver = new BroadcastReceiver() {
+
+        @SuppressLint({ "NewApi", "DefaultLocale" })
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (Def.ACTION_GATT_CONNECTED.equals(action)) {
+                runOnUiThread(() -> Toast.makeText(BLEPairingListActivity.this, "ACTION_GATT_CONNECTED", Toast.LENGTH_LONG).show());
+                mBleService.mBluetoothGatt.discoverServices();
+            } else if (Def.ACTION_GATT_DISCONNECTED.equals(action)) {
+                Toast.makeText(BLEPairingListActivity.this, "ACTION_GATT_DISCONNECTED", Toast.LENGTH_LONG)
+                        .show();
+
+            } else if (Def.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
+                String uuid = null;
+                //mBleService.mBluetoothGatt.readRemoteRssi();
+                mGattServices = mBleService.mBluetoothGatt.getServices();
+                for (BluetoothGattService gattService : mGattServices) {
+                    if (Def.NORDIC_UART_SERVICE_UUID.compareTo(gattService.getUuid()) == 0){
+                        runOnUiThread(() -> Toast.makeText(BLEPairingListActivity.this, "Found NORDIC_UART_SERVICE_UUID", Toast.LENGTH_LONG).show());
+                        UpdateList(mBleService.mBluetoothGatt.getDevice(), BluetoothProfile.STATE_CONNECTED);
+                        getUUIDFromService(gattService);
+                    }
+                }
+
+            } else if (Def.ACTION_DATA_AVAILABLE.equals(action)) {
+                String uuid = intent.getStringExtra(EXTRA_STRING_DATA);
+                runOnUiThread(() -> Toast.makeText(BLEPairingListActivity.this, "UUID " + uuid , Toast.LENGTH_LONG).show());
+            }
+        }
+    };
+
+    private void getUUIDFromService(BluetoothGattService service) {
+        BluetoothGattCharacteristic rxCharacteristic = null;
+        BluetoothGattCharacteristic txCharacteristic = null;
+        List<BluetoothGattCharacteristic> characterList = service.getCharacteristics();
+        for (BluetoothGattCharacteristic ch : characterList) {
+            if (ch.getUuid().compareTo(Def.NORDIC_UART_SERVICE_RX_UUID) == 0) {
+                //write cmd to get UUID
+                ch.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
+                ch.setValue("uuid_read");
+                rxCharacteristic = ch;
+            } else if (ch.getUuid().compareTo(Def.NORDIC_UART_SERVICE_TX_UUID) == 0) {
+                txCharacteristic = ch;
+
+            }
+            Log.i(TAG, "getUUIDFromService UUID " + ch.getUuid());
+            Log.i(TAG, "getUUIDFromService Value " + Arrays.toString(ch.getValue()));
+            Log.i(TAG, "getUUIDFromService Value " + ch.getStringValue(0));
+        }
+
+        if (txCharacteristic != null) {
+            UUID uuid = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
+            BluetoothGattDescriptor descriptor = txCharacteristic.getDescriptor(uuid);
+            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+            mBleService.mBluetoothGatt.writeDescriptor(descriptor);
+
+            mBleService.mBluetoothGatt.setCharacteristicNotification(txCharacteristic, true);
+            if (rxCharacteristic != null) {
+
+                try {
+                    Thread.sleep(3000);
+                }catch(InterruptedException e) {
+                    e.printStackTrace();
+                }
+                mBleService.mBluetoothGatt.writeCharacteristic(rxCharacteristic);
+            }
         }
     }
 }

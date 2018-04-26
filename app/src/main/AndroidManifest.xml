@@ -130,7 +130,7 @@
 
         <service
             android:name=".service.BleService"
-            android:enabled="false"
+            android:enabled="true"
             android:exported="false"/>
 
         <provider
