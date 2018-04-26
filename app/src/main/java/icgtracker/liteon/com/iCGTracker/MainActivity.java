@@ -24,6 +24,8 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -163,25 +165,19 @@ public class MainActivity extends AppCompatActivity {
                 if (TextUtils.equals(item.getValue(), mStudents.get(mCurrentStudentIdx).getNickname())){
                     mDrawerLayout.closeDrawers();
                 } else {
-                    switchAccount();
+                    switchAccount(item.getId());
                 }
             }
         }
     }
 
-    private void switchAccount() {
+    private void switchAccount(String studentId) {
         showSplashPage();
-        if (mStudents.size() == 0) {
-            return;
-        }
-        if (mStudents.size() == 1) {
-            mCurrentStudentIdx = 0;
-        } else {
 
-            if (mCurrentStudentIdx == mStudents.size() - 1) {
-                mCurrentStudentIdx = 0;
-            } else {
-                mCurrentStudentIdx++;
+        for (int idx = 0; idx < mStudents.size(); idx++) {
+            if (TextUtils.equals(mStudents.get(idx).getStudent_id(), studentId)){
+                mCurrentStudentIdx = idx;
+                break;
             }
         }
         updateDrawerData();
@@ -198,11 +194,13 @@ public class MainActivity extends AppCompatActivity {
         mDataset.clear();
         int i = 0;
         AppDrawerItem item;
-        for (JSONResponse.Student student : mStudents) {
+        for (int idx = 0; idx < mStudents.size(); idx++) {
+            JSONResponse.Student student = mStudents.get(idx);
             item = new AppDrawerItem();
             item.setItemType(AppDrawerItem.TYPE.USER);
             item.setValue(student.getNickname());
-            if (mStudents.indexOf(student) == mCurrentStudentIdx) {
+            item.setId(student.getStudent_id());
+            if (idx == mCurrentStudentIdx) {
                 item.setSelect(true);
             }
             mDataset.add(i++, item);

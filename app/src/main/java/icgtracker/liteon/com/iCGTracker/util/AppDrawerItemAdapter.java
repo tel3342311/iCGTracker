@@ -71,6 +71,8 @@ public class AppDrawerItemAdapter extends Adapter<AppDrawerItemAdapter.ViewHolde
             } else {
                 holder.mTitleTextView.setTextColor(ContextCompat.getColor(App.getContext(),R.color.md_black_1000));
             }
+            holder.mItemIcon.setBackground(ContextCompat.getDrawable(App.getContext(),R.drawable.setup_img_picture));
+            holder.mRootView.setBackgroundColor(ContextCompat.getColor(App.getContext(),R.color.md_white_1000));
             holder.mTitleTextView.setText(item.getValue());
             holder.mItemLinkIcon.setVisibility(View.VISIBLE);
         }
