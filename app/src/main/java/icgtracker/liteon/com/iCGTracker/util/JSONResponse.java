@@ -194,46 +194,126 @@ public class JSONResponse {
         /**
          * API 18
          */
-        @SerializedName("student_id")
-        private int student_id;
-        @SerializedName("nickname")
-        private String nickname;
-        @SerializedName("roll_no")
-        private int roll_no;
-        @SerializedName("uuid")
-        private String uuid;
+		@SerializedName("student_id")
+		private int student_id;
+		@SerializedName("student_name")
+		private String student_name;
+		@SerializedName("nickname")
+		private String nickname;
+		@SerializedName("roll_no")
+		private int roll_no;
+		@SerializedName("uuid")
+		private String uuid;
+		@SerializedName("registration_no")
+		private String registration_no;
+		@SerializedName("dob")
+		private String dob;
+		@SerializedName("gender")
+		private String gender;
+		@SerializedName("weight")
+		private String weight;
+		@SerializedName("height")
+		private String height;
+		@SerializedName("emergency_contact")
+		private String emergency_contact;
+		@SerializedName("allergies")
+		private String allergies;
 
-        public int getStudent_id() {
-            return student_id;
-        }
+		public String getStudent_name() {
+			return student_name;
+		}
 
-        public void setStudent_id(int student_id) {
-            this.student_id = student_id;
-        }
+		public void setStudent_name(String student_name) {
+			this.student_name = student_name;
+		}
 
-        public String getNickname() {
-            return nickname;
-        }
+		public String getRegistration_no() {
+			return registration_no;
+		}
 
-        public void setNickname(String nickname) {
-            this.nickname = nickname;
-        }
+		public void setRegistration_no(String registration_no) {
+			this.registration_no = registration_no;
+		}
 
-        public int getRoll_no() {
-            return roll_no;
-        }
+		public String getDob() {
+			return dob;
+		}
 
-        public void setRoll_no(int roll_no) {
-            this.roll_no = roll_no;
-        }
+		public void setDob(String dob) {
+			this.dob = dob;
+		}
 
-        public String getUuid() {
-            return uuid;
-        }
+		public String getGender() {
+			return gender;
+		}
 
-        public void setUuid(String uuid) {
-            this.uuid = uuid;
-        }
+		public void setGender(String gender) {
+			this.gender = gender;
+		}
+
+		public String getWeight() {
+			return weight;
+		}
+
+		public void setWeight(String weight) {
+			this.weight = weight;
+		}
+
+		public String getHeight() {
+			return height;
+		}
+
+		public void setHeight(String height) {
+			this.height = height;
+		}
+
+		public String getEmergency_contact() {
+			return emergency_contact;
+		}
+
+		public void setEmergency_contact(String emergency_contact) {
+			this.emergency_contact = emergency_contact;
+		}
+
+		public String getAllergies() {
+			return allergies;
+		}
+
+		public void setAllergies(String allergies) {
+			this.allergies = allergies;
+		}
+
+		public int getStudent_id() {
+			return student_id;
+		}
+
+		public void setStudent_id(int student_id) {
+			this.student_id = student_id;
+		}
+
+		public String getNickname() {
+			return nickname;
+		}
+
+		public void setNickname(String nickname) {
+			this.nickname = nickname;
+		}
+
+		public int getRoll_no() {
+			return roll_no;
+		}
+
+		public void setRoll_no(int roll_no) {
+			this.roll_no = roll_no;
+		}
+
+		public String getUuid() {
+			return uuid;
+		}
+
+		public void setUuid(String uuid) {
+			this.uuid = uuid;
+		}
 
 		/**
 		 * API 27
@@ -543,10 +623,40 @@ public class JSONResponse {
 		@SerializedName("gender")
 		private String gender;
 		@SerializedName("uuid")
-		private String uuid; 
-		
+		private String uuid;
+		@SerializedName("registration_no")
+		private String registration_no;
+		@SerializedName("emergency_contact")
+		private String emergency_contact;
+		@SerializedName("allergies")
+		private String allergies;
+
+		public String getRegistration_no() {
+			return registration_no;
+		}
+
+		public void setRegistration_no(String registration_no) {
+			this.registration_no = registration_no;
+		}
+
+		public String getEmergency_contact() {
+			return emergency_contact;
+		}
+
+		public void setEmergency_contact(String emergency_contact) {
+			this.emergency_contact = emergency_contact;
+		}
+
+		public String getAllergies() {
+			return allergies;
+		}
+
+		public void setAllergies(String allergies) {
+			this.allergies = allergies;
+		}
+
 		private int isDelete;
-		
+
 		/**
 		 * @return the isDelete
 		 */

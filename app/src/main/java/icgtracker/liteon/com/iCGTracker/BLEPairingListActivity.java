@@ -23,6 +23,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,6 +34,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -46,11 +48,13 @@ import icgtracker.liteon.com.iCGTracker.db.DBHelper;
 import icgtracker.liteon.com.iCGTracker.service.BleService;
 import icgtracker.liteon.com.iCGTracker.util.BLEItem;
 import icgtracker.liteon.com.iCGTracker.util.BLEItemAdapter;
+import icgtracker.liteon.com.iCGTracker.util.ConfirmDeleteDialog;
 import icgtracker.liteon.com.iCGTracker.util.CustomDialog;
 import icgtracker.liteon.com.iCGTracker.util.Def;
 import icgtracker.liteon.com.iCGTracker.util.GuardianApiClient;
 import icgtracker.liteon.com.iCGTracker.util.JSONResponse;
 import icgtracker.liteon.com.iCGTracker.util.Utils;
+import icgtracker.liteon.com.iCGTracker.util.WearableInfo;
 
 import static icgtracker.liteon.com.iCGTracker.util.Def.EXTRA_STRING_DATA;
 
@@ -81,6 +85,7 @@ public class BLEPairingListActivity extends AppCompatActivity implements BLEItem
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
     private BleService mBleService;
+    private ConfirmDeleteDialog mBLEFailConfirmDialog;
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
@@ -97,6 +102,8 @@ public class BLEPairingListActivity extends AppCompatActivity implements BLEItem
             mBleService = null;
         }
     };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -526,6 +533,9 @@ public class BLEPairingListActivity extends AppCompatActivity implements BLEItem
             } else if (Def.ACTION_DATA_AVAILABLE.equals(action)) {
                 String uuid = intent.getStringExtra(EXTRA_STRING_DATA);
                 runOnUiThread(() -> Toast.makeText(BLEPairingListActivity.this, "UUID " + uuid , Toast.LENGTH_LONG).show());
+                if (!TextUtils.isEmpty(uuid)) {
+                    new UpdateUUIDToCloud().execute(uuid, mBleService.mBluetoothGatt.getDevice().getAddress());
+                }
             }
         }
     };
@@ -564,6 +574,99 @@ public class BLEPairingListActivity extends AppCompatActivity implements BLEItem
                     e.printStackTrace();
                 }
                 mBleService.mBluetoothGatt.writeCharacteristic(rxCharacteristic);
+            }
+        }
+    }
+
+    class UpdateUUIDToCloud extends AsyncTask<String, Void, Boolean> {
+
+        private String mErrorMessage;
+        @Override
+        protected Boolean doInBackground(String... strings) {
+            String uuid = strings[0];
+            String address = strings[1];
+            JSONResponse.Student student = mStudents.get(mCurrnetStudentIdx);
+            //Update Wearable info
+            WearableInfo info = new WearableInfo();
+            info.setUuid(uuid);
+            info.setBtAddr(address);
+            info.setStudentID(mStudents.get(mCurrnetStudentIdx).getStudent_id());
+            mDbHelper.replaceWearableData(mDbHelper.getWritableDatabase(), info);
+
+            GuardianApiClient mApiClient = GuardianApiClient.getInstance(BLEPairingListActivity.this);
+            student.setUuid(uuid);
+            JSONResponse response = mApiClient.pairNewDevice(student);
+            if (response != null) {
+                String statusCode = response.getReturn().getResponseSummary().getStatusCode();
+                if (!TextUtils.equals(statusCode, Def.RET_SUCCESS_1) && !TextUtils.equals(statusCode, Def.RET_ERR_14) ) {
+                    return false;
+                } else {
+                    if (response.getReturn().getResults() != null) {
+
+                        String studentID = Integer.toString(response.getReturn().getResults().getStudent_id());
+                        String studentName = response.getReturn().getResults().getStudent_name();
+                        String nickName = response.getReturn().getResults().getNickname();
+                        String roll_no = Integer.toString(response.getReturn().getResults().getRoll_no());
+                        String registration_no = response.getReturn().getResults().getRegistration_no();
+                        String dob = response.getReturn().getResults().getDob();
+                        String gender = response.getReturn().getResults().getGender();
+                        String weight = response.getReturn().getResults().getWeight();
+                        String height = response.getReturn().getResults().getHeight();
+                        String emergency_contact = response.getReturn().getResults().getEmergency_contact();
+                        String allergies = response.getReturn().getResults().getAllergies();
+
+                        JSONResponse.Student item = new JSONResponse.Student();
+                        item.setUuid(uuid);
+                        item.setStudent_id(Integer.parseInt(studentID));
+                        item.setNickname(nickName);
+                        item.setRoll_no(Integer.parseInt(roll_no));
+                        item.setName(studentName);
+                        item.setRegistration_no(registration_no);
+                        item.setDob(dob);
+                        item.setGender(gender);
+                        item.setWeight(weight);
+                        item.setHeight(height);
+                        item.setEmergency_contact(emergency_contact);
+                        item.setAllergies(allergies);
+                        //For New child
+                        if (!TextUtils.equals(studentID, student.getStudent_id())) {
+
+                            item.setNickname(student.getNickname());
+                            item.setDob(student.getDob());
+                            item.setGender(student.getGender());
+                            item.setHeight(student.getHeight());
+                            item.setWeight(student.getWeight());
+                            mDbHelper.deleteChildByStudentID(mDbHelper.getWritableDatabase(), student.getStudent_id());
+                            mDbHelper.insertChild(mDbHelper.getWritableDatabase(), item);
+                        }
+                        mApiClient.updateChildData(item);
+                    }
+                    mDbHelper.updateChildByStudentId(mDbHelper.getWritableDatabase(), student);
+                    return true;
+                }
+
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean bool) {
+            if (bool.booleanValue() == false) {
+                CustomDialog dialog = new CustomDialog();
+                String title = String.format(getString(R.string.pairing_watch_pin_error));
+                dialog.setTitle(title);
+                dialog.setIcon(0);
+                dialog.setBtnText(getString(android.R.string.ok));
+                dialog.setBtnConfirm(v -> dialog.dismiss());
+                dialog.show(getSupportFragmentManager(), "dialog_fragment");
+            } else {
+                CustomDialog dialog = new CustomDialog();
+                String title = String.format(getString(R.string.pairing_watch_success), mStudents.get(mCurrnetStudentIdx).getNickname());
+                dialog.setTitle(title);
+                dialog.setIcon(0);
+                dialog.setBtnText(getString(android.R.string.ok));
+                dialog.setBtnConfirm(v -> onBackPressed());
+                dialog.show(getSupportFragmentManager(), "dialog_fragment");
             }
         }
     }

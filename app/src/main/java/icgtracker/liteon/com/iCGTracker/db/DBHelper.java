@@ -416,6 +416,14 @@ public class DBHelper extends SQLiteOpenHelper {
         db.update(WearableEntry.TABLE_NAME, cv, "uuid=?", args);
     }
 
+    public void replaceWearableData(SQLiteDatabase db, WearableInfo info) {
+		ContentValues cv = new ContentValues();
+		String[] args = new String[]{info.getUuid()};
+		cv.put(WearableEntry.COLUMN_NAME_ADDR, info.getBtAddr());
+		cv.put(WearableEntry.COLUMN_NAME_STUDENT_ID, info.getStudentID());
+		db.replace(WearableEntry.TABLE_NAME, null ,cv);
+	}
+
     public boolean isWearableExist(SQLiteDatabase db, String uuid) {
         if (TextUtils.isEmpty(uuid)) {
             return false;
