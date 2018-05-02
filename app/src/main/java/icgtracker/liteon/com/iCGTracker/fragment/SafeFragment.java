@@ -68,7 +68,9 @@ public class SafeFragment extends Fragment {
     private DBHelper mDbHelper;
     private SharedPreferences mSharePreference;
     private LocalBroadcastManager mLocalBroadcastManager;
-
+    private View mSOSView;
+    private View mSOSReleaseView;
+    private View mSepline;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -139,6 +141,9 @@ public class SafeFragment extends Fragment {
         mMapView = mRootView.findViewById(R.id.map_view);
         mLocationButton = mRootView.findViewById(R.id.map_location);
         mUpdateTime = mRootView.findViewById(R.id.update_time);
+        mSOSReleaseView = mRootView.findViewById(R.id.safty_item_release);
+        mSOSView = mRootView.findViewById(R.id.safty_item_danger);
+        mSepline = mRootView.findViewById(R.id.sep_line);
     }
 
     private void setListener() {
@@ -162,16 +167,44 @@ public class SafeFragment extends Fragment {
             mMapView.onResume();
         }
         mCurrnetStudentIdx = mSharePreference.getInt(Def.SP_CURRENT_STUDENT, 0);
+        mStudents = mDbHelper.queryChildList(mDbHelper.getReadableDatabase());
 
-        Intent startIntent = new Intent(App.getContext(), DataSyncService.class);
-        startIntent.setAction(Def.ACTION_GET_LOCATION);
-        startIntent.putExtra(Def.KEY_UUID, mStudents.get(mCurrnetStudentIdx).getUuid());
-        getActivity().startService(startIntent);
+        getLocation();
+        getSosEvent();
+        getSosRemoveEvent();
+
+        mSOSView.setVisibility(View.INVISIBLE);
+        mSOSReleaseView.setVisibility(View.INVISIBLE);
+        mSepline.setVisibility(View.INVISIBLE);
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Def.ACTION_ERROR_NOTIFY);
         filter.addAction(Def.ACTION_GET_LOCATION);
+        filter.addAction(Def.ACTION_GET_EVENT_REPORT);
         mLocalBroadcastManager.registerReceiver(mReceiver, filter);
+    }
+
+    private void getLocation(){
+        Intent startIntent = new Intent(App.getContext(), DataSyncService.class);
+        startIntent.setAction(Def.ACTION_GET_LOCATION);
+        startIntent.putExtra(Def.KEY_UUID, mStudents.get(mCurrnetStudentIdx).getUuid());
+        getActivity().startService(startIntent);
+    }
+
+    private void getSosEvent() {
+        Intent startIntent = new Intent(App.getContext(), DataSyncService.class);
+        startIntent.setAction(Def.ACTION_GET_EVENT_REPORT);
+        startIntent.putExtra(Def.KEY_STUDENT_ID, mStudents.get(mCurrnetStudentIdx).getStudent_id());
+        startIntent.putExtra(Def.KEY_EVENT_ID, Def.EVENT_ID_SOS_ALERT);
+        getActivity().startService(startIntent);
+    }
+
+    private void getSosRemoveEvent() {
+        Intent startIntent = new Intent(App.getContext(), DataSyncService.class);
+        startIntent.setAction(Def.ACTION_GET_EVENT_REPORT);
+        startIntent.putExtra(Def.KEY_STUDENT_ID, mStudents.get(mCurrnetStudentIdx).getStudent_id());
+        startIntent.putExtra(Def.KEY_EVENT_ID, Def.EVENT_ID_SOS_REMOVE);
+        getActivity().startService(startIntent);
     }
 
     @Override
@@ -224,6 +257,17 @@ public class SafeFragment extends Fragment {
                     mUpdateTime.setText(R.string.no_gps_data);
                 }
                 updateMap();
+            } else if (TextUtils.equals(Def.ACTION_GET_EVENT_REPORT, intent.getAction())) {
+                String eventId = intent.getStringExtra(Def.KEY_EVENT_ID);
+                String value = intent.getStringExtra(Def.EXTRA_EVENT_VALUE);
+                if (TextUtils.equals(eventId, Def.EVENT_ID_SOS_ALERT)){
+                    mSOSView.setVisibility(View.VISIBLE);
+                    ((TextView)mSOSView.findViewById(R.id.safty_item_time)).setText(value);
+                } else {
+                    mSOSReleaseView.setVisibility(View.VISIBLE);
+                    ((TextView)mSOSReleaseView.findViewById(R.id.safty_item_time)).setText(value);
+                }
+                mSepline.setVisibility(View.VISIBLE);
             }
         }
     };

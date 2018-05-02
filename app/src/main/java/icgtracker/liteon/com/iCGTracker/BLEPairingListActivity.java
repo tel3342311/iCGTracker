@@ -236,6 +236,7 @@ public class BLEPairingListActivity extends AppCompatActivity implements BLEItem
         }
         mGatt.close();
         mGatt = null;
+        unregisterReceiver(mbtBroadcastReceiver);
     }
 
     private void scanLeDevice(final boolean enable) {
@@ -531,9 +532,10 @@ public class BLEPairingListActivity extends AppCompatActivity implements BLEItem
                 }
 
             } else if (Def.ACTION_DATA_AVAILABLE.equals(action)) {
-                String uuid = intent.getStringExtra(EXTRA_STRING_DATA);
-                runOnUiThread(() -> Toast.makeText(BLEPairingListActivity.this, "UUID " + uuid , Toast.LENGTH_LONG).show());
-                if (!TextUtils.isEmpty(uuid)) {
+                String plain = intent.getStringExtra(EXTRA_STRING_DATA);
+                runOnUiThread(() -> Toast.makeText(BLEPairingListActivity.this, "UUID " + plain , Toast.LENGTH_LONG).show());
+                if (!TextUtils.isEmpty(plain)) {
+                    String uuid = String.format("%s-%s-%s-%s-%s", plain.substring(0,8), plain.substring(8,12), plain.substring(12,16), plain.substring(16,20), plain.substring(20));
                     new UpdateUUIDToCloud().execute(uuid, mBleService.mBluetoothGatt.getDevice().getAddress());
                 }
             }
@@ -586,24 +588,26 @@ public class BLEPairingListActivity extends AppCompatActivity implements BLEItem
             String uuid = strings[0];
             String address = strings[1];
             JSONResponse.Student student = mStudents.get(mCurrnetStudentIdx);
-            //Update Wearable info
-            WearableInfo info = new WearableInfo();
-            info.setUuid(uuid);
-            info.setBtAddr(address);
-            info.setStudentID(mStudents.get(mCurrnetStudentIdx).getStudent_id());
-            mDbHelper.replaceWearableData(mDbHelper.getWritableDatabase(), info);
+            String studentID = student.getStudent_id();
 
             GuardianApiClient mApiClient = GuardianApiClient.getInstance(BLEPairingListActivity.this);
+
+
+            if (!TextUtils.isEmpty(student.getUuid())&&!TextUtils.equals(student.getUuid(), uuid)){
+                mErrorMessage = getString(R.string.bind_uuid_not_match);
+                return false;
+            }
             student.setUuid(uuid);
             JSONResponse response = mApiClient.pairNewDevice(student);
             if (response != null) {
                 String statusCode = response.getReturn().getResponseSummary().getStatusCode();
                 if (!TextUtils.equals(statusCode, Def.RET_SUCCESS_1) && !TextUtils.equals(statusCode, Def.RET_ERR_14) ) {
+                    mErrorMessage = getString(R.string.pairing_watch_pin_error);
                     return false;
                 } else {
                     if (response.getReturn().getResults() != null) {
 
-                        String studentID = Integer.toString(response.getReturn().getResults().getStudent_id());
+                        studentID = Integer.toString(response.getReturn().getResults().getStudent_id());
                         String studentName = response.getReturn().getResults().getStudent_name();
                         String nickName = response.getReturn().getResults().getNickname();
                         String roll_no = Integer.toString(response.getReturn().getResults().getRoll_no());
@@ -638,14 +642,24 @@ public class BLEPairingListActivity extends AppCompatActivity implements BLEItem
                             item.setWeight(student.getWeight());
                             mDbHelper.deleteChildByStudentID(mDbHelper.getWritableDatabase(), student.getStudent_id());
                             mDbHelper.insertChild(mDbHelper.getWritableDatabase(), item);
+                            studentID = item.getStudent_id();
                         }
                         mApiClient.updateChildData(item);
                     }
+                    //Update Wearable info
+                    WearableInfo info = new WearableInfo();
+                    info.setUuid(uuid);
+                    info.setBtAddr(address);
+                    info.setStudentID(studentID);
+                    mDbHelper.replaceWearableData(mDbHelper.getWritableDatabase(), info);
+
                     mDbHelper.updateChildByStudentId(mDbHelper.getWritableDatabase(), student);
+
                     return true;
                 }
 
             }
+            mErrorMessage = getString(R.string.login_error_no_server_connection);
             return false;
         }
 
@@ -653,8 +667,7 @@ public class BLEPairingListActivity extends AppCompatActivity implements BLEItem
         protected void onPostExecute(Boolean bool) {
             if (bool.booleanValue() == false) {
                 CustomDialog dialog = new CustomDialog();
-                String title = String.format(getString(R.string.pairing_watch_pin_error));
-                dialog.setTitle(title);
+                dialog.setTitle(mErrorMessage);
                 dialog.setIcon(0);
                 dialog.setBtnText(getString(android.R.string.ok));
                 dialog.setBtnConfirm(v -> dialog.dismiss());

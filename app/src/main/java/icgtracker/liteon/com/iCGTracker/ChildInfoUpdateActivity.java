@@ -87,14 +87,31 @@ public class ChildInfoUpdateActivity extends AppCompatActivity implements IProfi
 
         mDbHelper = DBHelper.getInstance(this);
         mStudentName = getIntent().getStringExtra(Def.EXTRA_STUDENT_NAME);
-		mName.setText(mStudentName);
+
+		if (TextUtils.isEmpty(mStudentName)){
+		    mTitleView.setText(getString(R.string.input_tracker_info));
+            mName.setText("");
+        } else {
+            mName.setText(mStudentName);
+        }
         initRecycleView();
 
     }
 	
 	private Student createChild() {
-        Student student = mDbHelper.queryChildByName(mDbHelper.getReadableDatabase(), mStudentName);
-		return student;
+        if (TextUtils.isEmpty(mStudentName)) {
+            Student student = new Student();
+            student.setStudent_id((int)Calendar.getInstance().getTime().getTime());
+            student.setDob("2000-01-01");
+            student.setName("");
+            student.setGender(getString(R.string.setup_kid_male));
+            student.setHeight("0");
+            student.setWeight("0");
+            return student;
+        } else {
+            Student student = mDbHelper.queryChildByName(mDbHelper.getReadableDatabase(), mStudentName);
+            return student;
+        }
 	}
 
 	private void initRecycleView() {
@@ -295,6 +312,7 @@ public class ChildInfoUpdateActivity extends AppCompatActivity implements IProfi
 				}
 			}
 			updateData();
+			enterEditMode();
 		}		
 	};
 	
@@ -307,7 +325,7 @@ public class ChildInfoUpdateActivity extends AppCompatActivity implements IProfi
     			item.setValue(student.getDob());
     			break;
     		case GENDER:
-    			if (TextUtils.equals(student.getGender(), getString(R.string.setup_kid_male))) {
+    			if (TextUtils.equals(student.getGender(), "MALE")) {
     				item.setValue(getString(R.string.setup_kid_male));
     			} else {
     				item.setValue(getString(R.string.setup_kid_female));
@@ -405,7 +423,8 @@ public class ChildInfoUpdateActivity extends AppCompatActivity implements IProfi
         }
 
         protected void onPostExecute(String token) {
-        	onBackPressed();
+        	setResult(RESULT_OK);
+		    onBackPressed();
         }
     }
 	

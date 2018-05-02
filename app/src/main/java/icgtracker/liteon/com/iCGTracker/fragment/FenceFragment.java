@@ -34,6 +34,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -143,7 +145,11 @@ public class FenceFragment extends Fragment {
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(App.getContext());
         mDbHelper = DBHelper.getInstance(getActivity());
         mStudents = mDbHelper.queryChildList(mDbHelper.getReadableDatabase());
-        mFenceRangeList = mDbHelper.getFenceItemByUuid(mDbHelper.getReadableDatabase(), mStudents.get(mCurrnetStudentIdx).getUuid());
+        mCurrnetStudentIdx = mSharePreference.getInt(Def.SP_CURRENT_STUDENT, 0);
+        String uuid = mStudents.get(mCurrnetStudentIdx).getUuid();
+        if (!TextUtils.isEmpty(uuid)) {
+            mFenceRangeList = mDbHelper.getFenceItemByUuid(mDbHelper.getReadableDatabase(), mStudents.get(mCurrnetStudentIdx).getUuid());
+        }
         if (mFenceRangeList != null && mFenceRangeList.size() > 0) {
             mCurrentFenceIdx = mFenceRangeList.size() - 1;
         }
@@ -359,10 +365,12 @@ public class FenceFragment extends Fragment {
         filter.addAction(Def.ACTION_ERROR_NOTIFY);
         filter.addAction(Def.ACTION_LIST_FENCE);
         mLocalBroadcastManager.registerReceiver(mReceiver, filter);
-
+        mStudents = mDbHelper.queryChildList(mDbHelper.getReadableDatabase());
         mCurrnetStudentIdx = mSharePreference.getInt(Def.SP_CURRENT_STUDENT, 0);
-
-        mFenceRangeList = mDbHelper.getFenceItemByUuid(mDbHelper.getReadableDatabase(), mStudents.get(mCurrnetStudentIdx).getUuid());
+        String uuid = mStudents.get(mCurrnetStudentIdx).getUuid();
+        if (!TextUtils.isEmpty(uuid)) {
+            mFenceRangeList = mDbHelper.getFenceItemByUuid(mDbHelper.getReadableDatabase(), uuid);
+        }
         if (mFenceRangeList != null && mFenceRangeList.size() > 0) {
             mCurrentFenceIdx = mFenceRangeList.size() - 1;
             mNoFenceView.setVisibility(View.GONE);
@@ -393,7 +401,10 @@ public class FenceFragment extends Fragment {
                 String error = intent.getStringExtra(Def.EXTRA_ERROR_MESSAGE);
                 Utils.showErrorDialog(error);
             } else if (TextUtils.equals(Def.ACTION_LIST_FENCE, intent.getAction())) {
-                mFenceRangeList = mDbHelper.getFenceItemByUuid(mDbHelper.getReadableDatabase(), mStudents.get(mCurrnetStudentIdx).getUuid());
+                String uuid = mStudents.get(mCurrnetStudentIdx).getUuid();
+                if (!TextUtils.isEmpty(uuid)) {
+                    mFenceRangeList = mDbHelper.getFenceItemByUuid(mDbHelper.getReadableDatabase(), uuid);
+                }
                 if (mFenceRangeList != null && mFenceRangeList.size() > 0) {
                     mCurrentFenceIdx = mFenceRangeList.size() - 1;
                     mNoFenceView.setVisibility(View.GONE);

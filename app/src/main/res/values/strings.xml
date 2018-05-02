@@ -124,7 +124,7 @@
     <string name="child_photo_photo">寶貝照片</string>
     <string name="child_photo_photo_crop">裁切照片，請移動、縮放照片至您要的畫面</string>
     <!-- pairing watch page -->
-    <string name="pairing_watch_steps">請遵照圖示將手錶切換到配對頁面, 手錶切到配對畫面後, 請點選配對智慧手錶進行下一步</string>
+    <string name="pairing_watch_steps">請確認裝置在開機狀態並查看裝置包裝上顯示的裝置名稱及4位數PIN碼後, 點選藍牙裝置配對鍵進行配對！</string>
     <string name="pairing_watch_pair">配對智慧手錶</string>
     <string name="pairing_watch_later">之後再配對</string>
     <string name="pairing_watch_later_in_setting">之後可再至"設定"中配對手環</string>
@@ -142,4 +142,17 @@
     <string name="will_unbind_watch">將解除已綁定的智慧手錶</string>
     <string name="bind_cancel">取消</string>
     <string name="bind_confirm">確定</string>
+    <string name="bind_uuid_not_match">此手錶已跟小孩%s綁定, 請選擇其他裝置</string>
+    <string name="input_tracker_info">輸入珍愛者資訊</string>
+    <!-- Menu -->
+    <string name="switch_to">切換至%s</string>
+    <string name="add_new_child">新增寶貝</string>
+    <string name="delete_child">刪除%s</string>
+    <string name="app_info">App資訊與設定</string>
+    <string name="logout_confirm">確定要登出?</string>
+    <string name="delete_tracking">刪除追蹤%s</string>
+    <string name="delete_warning">此手機將無法看見該帳號紀錄，但雲端紀錄不會刪除，如日後要由此手機觀看，請再加入該帳號。</string>
+    <string name="delete_child_cancel">取消</string>
+    <string name="delete_child_confirm">確認</string>
+    <string name="child_deleted">%s已刪除</string>
 </resources>

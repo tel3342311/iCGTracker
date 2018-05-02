@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+	<TextView
+		android:id="@+id/pairing_title"
+		android:layout_width="289dp"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:layout_marginEnd="32dp"
+		android:layout_marginStart="32dp"
+		android:layout_marginTop="48dp"
+		android:lineSpacingExtra="@dimen/pairing_title_line_space"
+		android:text="@string/pairing_watch_steps"
+		android:textColor="@color/md_black_1000"
+		android:textSize="@dimen/pairing_title_text_size"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
+
+	<LinearLayout
+		android:id="@+id/login_btn_group"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_marginBottom="16dp"
+		android:layout_marginEnd="32dp"
+		android:layout_marginStart="32dp"
+		android:orientation="vertical"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent">
+
+		<android.support.v7.widget.AppCompatButton
+			android:id="@+id/pairing_watch_now"
+			style="@style/list_item"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="@dimen/login_option_btn_margin_bottom"
+			android:background="@color/color_bottom_bar_normal"
+			android:text="@string/pairing_watch_pair"
+			android:textColor="@color/md_white_1000" />
+
+	</LinearLayout>
+
+	<ImageView
+		android:id="@+id/watch_bg"
+		android:layout_width="@dimen/pairing_watch_bg_width"
+		android:layout_height="@dimen/pairing_watch_bg_width"
+		android:layout_above="@id/login_btn_group"
+		android:layout_centerHorizontal="true"
+		android:layout_marginBottom="8dp"
+		android:layout_marginEnd="8dp"
+		android:layout_marginStart="8dp"
+		android:layout_marginTop="8dp"
+		android:background="@drawable/deviceinfo_img_device"
+		app:layout_constraintBottom_toTopOf="@+id/login_btn_group"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/pairing_title" />
+</android.support.constraint.ConstraintLayout>

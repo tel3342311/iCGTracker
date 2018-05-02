@@ -127,7 +127,7 @@ public class Def {
 	public static final String EVENT_ID_SOS_ALERT = "13";
 	public static final String EVENT_ID_SOS_REMOVE = "14";
 	public static final String EVENT_ID_GPS_LOCATION = "19";
-	
+    public static final String KEY_EVENT_ID = "event_id";
 	//EVENT DURATION
 	public static final String EVENT_DURATION_ONE_DAY = "1";
 	public static final String EVENT_DURATION_WEEK = "7";
@@ -177,7 +177,9 @@ public class Def {
 	public static final String ACTION_ERROR_NOTIFY = "com.liteon.icampusguardian.ACTION_ERROR_NOTIFY";
 	public static final String EXTRA_ERROR_MESSAGE = "com.liteon.icampusguardian.EXTRA_ERROR_MESSAGE";
 
-	// Message types sent from the BluetoothChatService Handler
+    public static final String EXTRA_EVENT_VALUE = "com.liteon.icampusguardian.EXTRA_EVENT_VALUE";
+
+    // Message types sent from the BluetoothChatService Handler
 	public static final int MESSAGE_STATE_CHANGE = 1;
 	public static final int MESSAGE_READ = 2;
 	public static final int MESSAGE_WRITE = 3;

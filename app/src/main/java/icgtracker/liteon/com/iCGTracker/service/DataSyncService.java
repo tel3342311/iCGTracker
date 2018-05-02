@@ -282,7 +282,30 @@ public class DataSyncService extends IntentService {
     }
 
     private void handleGetEventReport(Intent intent) {
-
+        String student_id = intent.getStringExtra(Def.KEY_STUDENT_ID);
+        String event_id = intent.getStringExtra(Def.KEY_EVENT_ID);
+        JSONResponse response = mApiClient.getDeviceEventReport(student_id, event_id, "1");
+        //Parse Event
+        if (response != null) {
+            JSONResponse.Results results = response.getReturn().getResults();
+            if (results != null) {
+                JSONResponse.Device[] devices = results.getDevices();
+                if (devices != null && devices.length > 0) {
+                    JSONResponse.DeviceEvent[] events = devices[0].getDevice_events();
+                    String event_time = null;
+                    for (JSONResponse.DeviceEvent event : events) {
+                        String event_occured_date = event.getEvent_occured_date();
+                        Date date = getDateByStringFormatted(event_occured_date, "yyyy-MM-dd HH:mm:ss.S");
+                        event_time = getStringByDate(date, "HH:mm");
+                    }
+                    Intent event_intent = new Intent();
+                    event_intent.setAction(Def.ACTION_GET_EVENT_REPORT);
+                    event_intent.putExtra(Def.KEY_EVENT_ID, event_id);
+                    event_intent.putExtra(Def.EXTRA_EVENT_VALUE, event_time);
+                    sendBroadcast(event_intent);
+                }
+            }
+        }
     }
 
     private void handleLogoutUser(Intent intent) {
@@ -312,5 +335,22 @@ public class DataSyncService extends IntentService {
         Intent intent = new Intent(Def.ACTION_ERROR_NOTIFY);
         intent.putExtra(Def.EXTRA_ERROR_MESSAGE, message);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+
+    private Date getDateByStringFormatted(String time, String pattern) {
+        Date date = Calendar.getInstance().getTime();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        try {
+            date = simpleDateFormat.parse(time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+    private String getStringByDate(Date date, String pattern) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        return simpleDateFormat.format(date);
     }
 }

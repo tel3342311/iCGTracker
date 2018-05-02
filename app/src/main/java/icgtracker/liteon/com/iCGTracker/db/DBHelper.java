@@ -416,11 +416,15 @@ public class DBHelper extends SQLiteOpenHelper {
         db.update(WearableEntry.TABLE_NAME, cv, "uuid=?", args);
     }
 
+	public long deleteWearableData(SQLiteDatabase db, String uuid) {
+		return db.delete(WearableEntry.TABLE_NAME, "uuid=?", new String[]{uuid});
+	}
+
     public void replaceWearableData(SQLiteDatabase db, WearableInfo info) {
 		ContentValues cv = new ContentValues();
-		String[] args = new String[]{info.getUuid()};
 		cv.put(WearableEntry.COLUMN_NAME_ADDR, info.getBtAddr());
 		cv.put(WearableEntry.COLUMN_NAME_STUDENT_ID, info.getStudentID());
+		cv.put(WearableEntry.COLUMN_NAME_UUID, info.getUuid());
 		db.replace(WearableEntry.TABLE_NAME, null ,cv);
 	}
 
@@ -436,6 +440,23 @@ public class DBHelper extends SQLiteOpenHelper {
         c.close();
         return false;
     }
+
+    public WearableInfo getWearableInfoByUuid(SQLiteDatabase db, String uuid) {
+		if (TextUtils.isEmpty(uuid)) {
+			return null;
+		}
+		Cursor c = db.query(WearableEntry.TABLE_NAME, null, "uuid =?", new String[] { uuid }, null, null, null, null);
+		if (c.moveToFirst()) { // if the row exist then return the id
+			WearableInfo info = new WearableInfo();
+			info.setUuid(uuid);
+			info.setBtAddr(c.getString(c.getColumnIndex(WearableEntry.COLUMN_NAME_ADDR)));
+			info.setStudentID(c.getString(c.getColumnIndex(WearableEntry.COLUMN_NAME_STUDENT_ID)));
+			c.close();
+			return info;
+		}
+		c.close();
+		return null;
+	}
 
     public void insertChildLocation(SQLiteDatabase db, ContentValues cv) {
         db.insert(ChildLocationEntry.TABLE_NAME, null, cv);

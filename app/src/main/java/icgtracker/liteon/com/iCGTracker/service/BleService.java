@@ -242,8 +242,10 @@ public class BleService extends Service {
 
     @SuppressLint("NewApi")
     public void close(BluetoothGatt gatt) {
-        gatt.disconnect();
-        gatt.close();
+        if (gatt != null) {
+            gatt.disconnect();
+            gatt.close();
+        }
         if (mBluetoothAdapter != null) {
             mBluetoothAdapter.cancelDiscovery();
             mBluetoothAdapter = null;

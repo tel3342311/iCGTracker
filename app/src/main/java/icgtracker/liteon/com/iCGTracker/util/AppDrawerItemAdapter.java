@@ -57,6 +57,7 @@ public class AppDrawerItemAdapter extends Adapter<AppDrawerItemAdapter.ViewHolde
 	@Override
 	public void onBindViewHolder(ViewHolder holder, int position) {
         AppDrawerItem item = mDataset.get(position);
+        holder.mRootView.setEnabled(true);
         if (item.getItemType() == AppDrawerItem.TYPE.DELETE_USER) {
         	holder.mTitleTextView.setText(item.getValue());
         	holder.mItemIcon.setBackground(ContextCompat.getDrawable(App.getContext(), R.drawable.menu_img_delete));
@@ -65,6 +66,10 @@ public class AppDrawerItemAdapter extends Adapter<AppDrawerItemAdapter.ViewHolde
             holder.mTitleTextView.setText(item.getTitle());
             holder.mItemIcon.setBackground(ContextCompat.getDrawable(App.getContext(), R.drawable.menu_img_add));
             holder.mRootView.setBackgroundColor(ContextCompat.getColor(App.getContext(),R.color.md_grey_300));
+            if (mDataset.size() >= 7) {
+                holder.mRootView.setEnabled(false);
+                holder.mTitleTextView.setTextColor(ContextCompat.getColor(App.getContext(), R.color.md_grey_500));
+            }
         } else {
             if (item.getSelect()){
                 holder.mTitleTextView.setTextColor(ContextCompat.getColor(App.getContext(),R.color.color_accent));

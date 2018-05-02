@@ -3,6 +3,7 @@ package icgtracker.liteon.com.iCGTracker;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
@@ -21,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -36,10 +38,14 @@ import icgtracker.liteon.com.iCGTracker.fragment.SafeFragment;
 import icgtracker.liteon.com.iCGTracker.util.AppDrawerItem;
 import icgtracker.liteon.com.iCGTracker.util.AppDrawerItemAdapter;
 import icgtracker.liteon.com.iCGTracker.util.BottomNavigationViewHelper;
+import icgtracker.liteon.com.iCGTracker.util.ConfirmDeleteDialog;
+import icgtracker.liteon.com.iCGTracker.util.CustomDialog;
 import icgtracker.liteon.com.iCGTracker.util.Def;
 import icgtracker.liteon.com.iCGTracker.util.FenceEntyAdapter;
+import icgtracker.liteon.com.iCGTracker.util.GuardianApiClient;
 import icgtracker.liteon.com.iCGTracker.util.JSONResponse;
 import icgtracker.liteon.com.iCGTracker.util.RecordEventItem;
+import icgtracker.liteon.com.iCGTracker.util.Utils;
 import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity {
@@ -64,6 +70,9 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.Adapter mDrawerAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<AppDrawerItem> mDataset = new ArrayList<>();
+    private ConfirmDeleteDialog mDeleteAccountConfirmDialog;
+    private final static int REQUEST_ADDUSER = 1001;
+    private final static int REQUEST_READY_PAIR = 1002;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,8 +168,12 @@ public class MainActivity extends AppCompatActivity {
         } else {
             if (item.getItemType() == AppDrawerItem.TYPE.ADD_USER){
 
-            } else if (item.getItemType() == AppDrawerItem.TYPE.DELETE_USER){
+                Intent intent = new Intent();
+                intent.setClass(this, ChildInfoUpdateActivity.class);
+                startActivityForResult(intent, REQUEST_ADDUSER);
 
+            } else if (item.getItemType() == AppDrawerItem.TYPE.DELETE_USER){
+                deleteAccount();
             } else {
                 if (TextUtils.equals(item.getValue(), mStudents.get(mCurrentStudentIdx).getNickname())){
                     mDrawerLayout.closeDrawers();
@@ -244,11 +257,14 @@ public class MainActivity extends AppCompatActivity {
         } else {
             //mBottomView.setSelectedItemId(R.id.action_safety);
         }
-
+        mStudents = mDbHelper.queryChildList(mDbHelper.getReadableDatabase());
+        mCurrentStudentIdx = mSharePreference.getInt(Def.SP_CURRENT_STUDENT, 0);
         if (mStudents != null && mStudents.size() > 0) {
             String name = mStudents.get(mCurrentStudentIdx).getNickname();
             mChildName.setText(name);
         }
+        updateDrawerData();
+        mDrawerAdapter.notifyDataSetChanged();
     }
 
     private void showLoginPage() {
@@ -280,6 +296,108 @@ public class MainActivity extends AppCompatActivity {
             } else if (navigation == NAVIGATION_DRAWER) {
                 mToolbar.setNavigationIcon(R.drawable.ic_dehaze_white_24dp);
                 mToolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(Gravity.LEFT));
+            }
+        }
+    }
+
+    public void deleteAccount() {
+        StringBuilder sBuilder = new StringBuilder();
+        sBuilder.append(String.format(getString(R.string.delete_tracking), mChildName.getText()))
+                .append("\n")
+                .append(getString(R.string.delete_warning));
+        mDeleteAccountConfirmDialog = new ConfirmDeleteDialog();
+        mDeleteAccountConfirmDialog.setOnConfirmEventListener(mOnDeleteAccountConfirm);
+        mDeleteAccountConfirmDialog.setmOnCancelListener(mOnDeleteAccountCancel);
+        mDeleteAccountConfirmDialog.setmTitleText(sBuilder.toString());
+        mDeleteAccountConfirmDialog.setmBtnConfirmText(getString(R.string.delete_child_confirm));
+        mDeleteAccountConfirmDialog.setmBtnCancelText(getString(R.string.delete_child_cancel));
+        mDeleteAccountConfirmDialog.show(getSupportFragmentManager(), "dialog_fragment");
+    }
+
+    private View.OnClickListener mOnDeleteAccountConfirm = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            if (mStudents.size() == 0) {
+                return;
+            }
+            JSONResponse.Student student = mStudents.get(mCurrentStudentIdx);
+            student.setIsDelete(1);
+            mDbHelper.deleteChildByStudentID(mDbHelper.getWritableDatabase(), student.getStudent_id());
+            mStudents.remove(student);
+            SharedPreferences.Editor editor = getSharedPreferences(Def.SHARE_PREFERENCE, Context.MODE_PRIVATE).edit();
+            editor.putInt(Def.SP_CURRENT_STUDENT, 0);
+            editor.commit();
+            new UnPairCloudTask().execute(student);
+            mDeleteAccountConfirmDialog.dismiss();
+            final CustomDialog dialog = new CustomDialog();
+            dialog.setTitle(String.format(getString(R.string.child_deleted), mChildName.getText()));
+            dialog.setBtnText(getString(android.R.string.ok));
+            dialog.setBtnConfirm(v1 -> {
+                dialog.dismiss();
+                if (mStudents.size() == 0) {
+                    mLogoutButton.callOnClick();
+                } else {
+                    switchAccount(mStudents.get(0).getStudent_id());
+                }
+            });
+            dialog.show(getSupportFragmentManager(), "dialog_fragment");
+        }
+    };
+
+    private View.OnClickListener mOnDeleteAccountCancel = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            mDeleteAccountConfirmDialog.dismiss();
+        }
+    };
+
+    class UnPairCloudTask extends AsyncTask<JSONResponse.Student, Void, Void> {
+
+        @Override
+        protected Void doInBackground(JSONResponse.Student... params) {
+            JSONResponse.Student student = params[0];
+            GuardianApiClient apiClient = GuardianApiClient.getInstance(MainActivity.this);
+            JSONResponse response = apiClient.unpairDevice(student);
+            String uuid = student.getUuid();
+            if (response != null) {
+                if (response.getReturn() != null) {
+                    String statusCode = response.getReturn().getResponseSummary().getStatusCode();
+                    if (TextUtils.equals(statusCode, Def.RET_SUCCESS_1)) {
+                        student.setUuid("");
+                        mDbHelper.updateChildData(mDbHelper.getWritableDatabase(), student);
+                    } else if (TextUtils.equals(statusCode, Def.RET_ERR_16)) {
+                        student.setUuid("");
+                        mDbHelper.updateChildData(mDbHelper.getWritableDatabase(), student);
+                    }
+                    mDbHelper.deleteWearableData(mDbHelper.getWritableDatabase(), uuid);
+                }
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_ADDUSER) {
+            if (RESULT_OK == resultCode){
+                Intent intent = new Intent();
+                intent.setClass(this, ChildPairingActivity.class);
+                startActivityForResult(intent, REQUEST_READY_PAIR);
+            }
+        } else if (requestCode == REQUEST_READY_PAIR) {
+            if (RESULT_OK == resultCode){
+                Intent intent = new Intent();
+                intent.setClass(this, BLEPairingListActivity.class);
+                String name = mStudents.get(mCurrentStudentIdx).getNickname();
+                intent.putExtra(Def.EXTRA_STUDENT_NAME, name);
+                startActivityForResult(intent, REQUEST_READY_PAIR);
             }
         }
     }
